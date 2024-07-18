@@ -3,6 +3,7 @@ package biz.moapp.transcription_app.network
 import  android.util.Log
 import biz.moapp.transcription_app.BuildConfig
 import biz.moapp.transcription_app.model.ChatCompletions
+import biz.moapp.transcription_app.model.child.ChatMessage
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -53,4 +54,13 @@ class RetrofitOpenAiNetwork @Inject constructor(moshi: Moshi):OpenAiDataSource{
        }
     }
 
+    fun createJson(message: String) = ChatCompletions.Request(
+        model = "gpt-4o",
+        messages = listOf(
+            ChatMessage(
+                role = "user",
+                content = "Please summarize the following sentence and reply in Japanese.：$message"
+            ),
+        ),
+    )
 }
