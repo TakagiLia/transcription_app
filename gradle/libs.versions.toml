@@ -18,6 +18,10 @@ moshiKotlin = "1.15.0"
 moshiKotlinCodegen = "1.15.0"
 #okHTTP
 loggingInterceptor = "4.10.0"
+#Dagger Hilt
+hiltAndroid = "2.51"
+hiltAndroidCompiler = "2.51"
+hiltNavigationCompose = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,9 +48,14 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
 #okHTTP
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+#Dagger Hilt
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-plugin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version = "1.8.22"}
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version = "2.51"}
 
