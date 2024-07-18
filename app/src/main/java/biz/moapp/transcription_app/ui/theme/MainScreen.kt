@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,8 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
-    var speechText = remember { mutableStateOf("Your speech will appear here.") }
+fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?,mainScreenViewModel: MainScreenViewModel){
+    var speechText = remember { mutableStateOf("") }
     var speechStatus = remember { mutableStateOf("No Speech") }
     var isRecording by remember { mutableStateOf(false) }
 
@@ -58,12 +59,14 @@ fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
         }
         override fun onError(error: Int) { /*onResult("onError")*/ }
         override fun onResults(results: Bundle?) {
-            Log.d("--SpeechRecognizer", "onResults${results}")
+            Log.d("--SpeechRecognizer", "onResults：${results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let {it[0]}}")
             speechStatus.value = "Result Speech!"
             /**4 音声認識の結果を取得 UIに反映**/
             val stringArray = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             stringArray?.let {
+                Log.d("--SpeechRecognizer", "read:${it[0]}")
                 speechText.value = it[0] // 認識結果を UI に反映
+                Log.d("--SpeechRecognizer", "speechText:${speechText.value}")
             }
         }
         override fun onPartialResults(partialResults: Bundle?) {
@@ -87,6 +90,20 @@ fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
     ) {
 
         Text(text = speechText.value)
+
+        when (mainScreenViewModel.uiState.sendResultState) {
+            is MainUiState.SendResultState.NotYet -> Unit
+            is MainUiState.SendResultState.Loading -> {
+                CircularProgressIndicator()
+            }
+            is MainUiState.SendResultState.Success -> {
+                (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
+                    Log.d("--result response：　",value)
+                    Text(text = value, color = Color.White)
+                }
+            }
+            is MainUiState.SendResultState.Error -> {}
+        }
 
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -117,6 +134,8 @@ fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
                     if (isRecording) {
                         speechRecognizer?.stopListening()
                         isRecording = false
+                        mainScreenViewModel.Summary(speechText.value)
+                        Log.d("--SpeechRecognizer",speechText.value)
                     }
                 }) {
                 Text(modifier = Modifier.padding(8.dp),text = "Stop")
