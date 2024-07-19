@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,20 +24,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import biz.moapp.transcription_app.TranscriptionService
 
 @Composable
-fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
-    var speechText = remember { mutableStateOf("Your speech will appear here.") }
+fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?,mainScreenViewModel: MainScreenViewModel){
+    var speechText = remember { mutableStateOf("") }
     var speechStatus = remember { mutableStateOf("No Speech") }
     var isRecording by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     /**speechRecognizerの独自実装　オブジェクト式(object: 無名オブジェクト)　いちいちクラス作ったりしなくても実装可能**/
     /**インターフェースを実装するオブジェクトを簡潔かつ柔軟に生成可能。特定のメソッドのみに処理を追加したい場合や、オブジェクトを一時的に使用したい場合に効果的**/
     speechRecognizer?.setRecognitionListener(object : RecognitionListener {
         override fun onRmsChanged(rmsdB: Float) {
             /**音声の入力レベル（dB）の変化をUIに表示**/
-//            Log.d("SpeechRecognizer", "RMS dB changed: $rmsdB")
+            Log.d("SpeechRecognizer", "RMS dB changed: $rmsdB")
         }
         override fun onReadyForSpeech(params: Bundle?) {
             /**1 音声認識の準備ができたことをUIに表示**/
@@ -58,12 +63,14 @@ fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
         }
         override fun onError(error: Int) { /*onResult("onError")*/ }
         override fun onResults(results: Bundle?) {
-            Log.d("--SpeechRecognizer", "onResults${results}")
+            Log.d("--SpeechRecognizer", "onResults：${results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let {it[0]}}")
             speechStatus.value = "Result Speech!"
             /**4 音声認識の結果を取得 UIに反映**/
             val stringArray = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             stringArray?.let {
+                Log.d("--SpeechRecognizer", "read:${it[0]}")
                 speechText.value = it[0] // 認識結果を UI に反映
+                Log.d("--SpeechRecognizer", "speechText:${speechText.value}")
             }
         }
         override fun onPartialResults(partialResults: Bundle?) {
@@ -88,6 +95,20 @@ fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
 
         Text(text = speechText.value)
 
+        when (mainScreenViewModel.uiState.sendResultState) {
+            is MainUiState.SendResultState.NotYet -> Unit
+            is MainUiState.SendResultState.Loading -> {
+                CircularProgressIndicator()
+            }
+            is MainUiState.SendResultState.Success -> {
+                (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
+                    Log.d("--result response：　",value)
+                    Text(text = value, color = Color.White)
+                }
+            }
+            is MainUiState.SendResultState.Error -> {}
+        }
+
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ){
@@ -96,30 +117,23 @@ fun MainScreen(modifier : Modifier, speechRecognizer : SpeechRecognizer?){
                 .padding(16.dp),
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(1.dp, Color.Black),
-                enabled = !isRecording,
                 onClick = {
                     Log.d("--Button","start")
+                    val intent = Intent(context, TranscriptionService::class.java)
+                    intent.putExtra("text", "hello world")
                     if (!isRecording) {
+                        context.startService(intent)
                         speechRecognizer?.startListening(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH))
                         isRecording = true
-                    }
-                }) {
-                Text(modifier = Modifier.padding(8.dp),text = "Start")
-            }
-            Button(modifier = Modifier
-                .weight(0.5f)
-                .padding(16.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color.Black),
-                enabled = isRecording,
-                onClick = {
-                    Log.d("--Button","stop")
-                    if (isRecording) {
+                    }else{
+                        Log.d("--Button","stop")
                         speechRecognizer?.stopListening()
+                        context.stopService(intent)
                         isRecording = false
+                        Log.d("--SpeechRecognizer",speechText.value)
                     }
                 }) {
-                Text(modifier = Modifier.padding(8.dp),text = "Stop")
+                Text(modifier = Modifier.padding(8.dp),text = if (!isRecording) "Start" else "Stop")
             }
         }
     }
