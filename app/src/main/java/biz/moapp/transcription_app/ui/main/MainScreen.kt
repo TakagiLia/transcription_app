@@ -51,9 +51,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel){
 
 //    val mockText = "最近、少子高齢化が深刻化してるってニュースでよく見るけど、実際どんな問題があるんだろう？そうだな、まず少子化は労働力不足を引き起こす。将来の年金や社会保障制度の維持も難しくなるし、経済成長も鈍化する恐れがある。私は高齢者福祉の現場にいるけど、介護が必要な高齢者が増える一方で、介護人材が不足してるのが深刻な問題だよ。確かに、ニュースで見たことある。じゃあ、どんな対策が必要なのかな？国や自治体では、子育て支援策を充実させて出生率を上げる取り組みをしてる。例えば、児童手当の拡充や保育サービスの充実とかね。だけど、経済的な支援だけでは解決できない問題もあると思う。子育てしやすい社会の雰囲気づくりも大切なんじゃないかな。具体的にはどんなこと？例えば、育児休暇を取りやすい職場環境を作ったり、地域で子育てをサポートする仕組みを作ったりすることかな。そうだな。あとは、若い世代が将来に希望を持てる社会にすることも重要だ。安定した雇用や結婚、子育てをしやすい環境を整える必要がある。高齢化についてはどうすればいいんだろう？高齢者が安心して暮らせる社会にするためには、介護サービスの充実や住みやすい街づくりが欠かせない。それと同時に、高齢者が社会参加できる機会を増やすことも大切だ。健康寿命を延ばして、元気な高齢者が活躍できる社会を目指すべきだと思う。なるほど、少子高齢化って複雑な問題なんだね。でも、みんなで協力して解決していく必要があるんだと感じたよ。その通りだ。少子高齢化は日本社会全体で取り組むべき課題だからね。私たち一人ひとりができることから始めて、未来のためにより良い社会を作っていきたいね。うん、私も自分にできることを考えて行動してみようと思う。今日は貴重な話を聞かせてくれてありがとう。こちらこそ、ありがとう。"
 
-    val maxModifierButton : Modifier = Modifier
-        .fillMaxWidth()
-        .height(80.dp)
+    val maxModifierButton : Modifier = Modifier.fillMaxWidth().height(80.dp)
+
 
     /**UI**/
     Column(modifier = modifier.fillMaxSize(),
@@ -61,9 +60,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel){
         Text(text = speechStatus.value, color = Color.Magenta)
     }
 
-    Column(modifier = modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState()),
+
+    Column(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -111,8 +109,10 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel){
         when(mainUiState){
             is UIState.NotYet -> {}
             is UIState.Loading -> {CircularProgressIndicator()}
-            is UIState.Success -> {
+            is UIState.Success -> 
                 Spacer(modifier = Modifier.height(5.dp))
+
+
 
                 OutlinedCard(
                     colors = CardDefaults.cardColors(
@@ -133,6 +133,11 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel){
                         color = Color.White,
                         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                         modifier = Modifier.padding(4.dp))
+                    border = BorderStroke(1.dp, Color.Black),
+                    modifier = Modifier
+                            .fillMaxSize(),
+                ) {
+
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(),

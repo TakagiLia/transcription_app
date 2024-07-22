@@ -96,6 +96,7 @@ class MainScreenViewModel@Inject constructor(
         }
     }
 
+
     fun recordingStart(recorder: MediaRecorder, filePath : String){
         audioUseCase.recordingStart(recorder,filePath)
     }
@@ -103,6 +104,7 @@ class MainScreenViewModel@Inject constructor(
     fun recordingStop(recorder: MediaRecorder){
         audioUseCase.recordingStop(recorder)
     }
+
 
     fun audioPlay(filePath : String){
         mediaPlayer = audioUseCase.audioPlay(filePath)
