@@ -16,6 +16,7 @@ import biz.moapp.transcription_app.network.TranscriptionResponse
 import biz.moapp.transcription_app.ui.state.MainUiState
 import biz.moapp.transcription_app.ui.state.UIState
 import biz.moapp.transcription_app.usecase.AudioUseCase
+import biz.moapp.transcription_app.usecase.FirebaseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +31,8 @@ class MainScreenViewModel@Inject constructor(
     private val retrofitOpenAiNetwork: RetrofitOpenAiNetwork,
     private val openAiAudioApi: OpenAiAudioApi,
     private val ioDispatcher: CoroutineDispatcher,
-    private val audioUseCase: AudioUseCase
+    private val audioUseCase: AudioUseCase,
+    private val firebaseUseCase: FirebaseUseCase
 ): ViewModel() {
 
     var uiState by mutableStateOf(MainUiState())
@@ -94,19 +96,30 @@ class MainScreenViewModel@Inject constructor(
         }
     }
 
-    fun recordingStart(recorder: MediaRecorder){
-        audioUseCase.recordingStart(recorder)
+    fun recordingStart(recorder: MediaRecorder, filePath : String){
+        audioUseCase.recordingStart(recorder,filePath)
     }
 
     fun recordingStop(recorder: MediaRecorder){
         audioUseCase.recordingStop(recorder)
     }
 
-    fun audioPlay(){
-        mediaPlayer = audioUseCase.audioPlay()
+    fun audioPlay(filePath : String){
+        mediaPlayer = audioUseCase.audioPlay(filePath)
     }
 
     fun audioStop(){
         mediaPlayer?.let { audioUseCase.audioStop(it) }
+    }
+
+    fun summarySave(summary : String){
+
+        viewModelScope.launch {
+            try{
+                firebaseUseCase.saveSummary(summary)
+            }catch(ex : Exception){
+                Log.d("--summarySave","Failure: ${ex.message}",ex)
+            }
+        }
     }
 }
