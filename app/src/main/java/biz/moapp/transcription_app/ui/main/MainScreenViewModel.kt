@@ -1,4 +1,4 @@
-package biz.moapp.transcription_app.ui.theme
+package biz.moapp.transcription_app.ui.main
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
@@ -13,6 +13,8 @@ import biz.moapp.transcription_app.model.ChatCompletions
 import biz.moapp.transcription_app.network.OpenAiAudioApi
 import biz.moapp.transcription_app.network.RetrofitOpenAiNetwork
 import biz.moapp.transcription_app.network.TranscriptionResponse
+import biz.moapp.transcription_app.ui.state.MainUiState
+import biz.moapp.transcription_app.ui.state.UIState
 import biz.moapp.transcription_app.usecase.AudioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -56,7 +58,7 @@ class MainScreenViewModel@Inject constructor(
                         Log.d("--result response１-","${result.choices.map { it.message?.content }}")
                         uiState.copy(
                             sendResultState = MainUiState.SendResultState.Success(
-                                result.choices.map { it.message?.content ?: "No Text...."}
+                                result.choices.map { it.message?.content ?: "No Text...." }
                             )
                         )
                     }
@@ -85,8 +87,6 @@ class MainScreenViewModel@Inject constructor(
                     transcriptionText = response.text
                 }
 
-                _mainScreenUiState.value = UIState.Success(TranscriptionResponse(mockText))
-                    transcriptionText = mockText
             }catch(e:Exception){
                 _mainScreenUiState.value = UIState.Error(e.message ?: "Unknown error")
                     Log.d("--openAiAudioApi Error","Message:${e.message}",e)
