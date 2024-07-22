@@ -1,4 +1,4 @@
-package biz.moapp.transcription_app.ui.theme
+package biz.moapp.transcription_app.ui.state
 
 data class MainUiState(
     val prompt: String = "",
