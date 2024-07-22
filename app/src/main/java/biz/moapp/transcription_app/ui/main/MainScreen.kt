@@ -1,4 +1,4 @@
-package biz.moapp.transcription_app.ui.theme
+package biz.moapp.transcription_app.ui.main
 
 import android.media.MediaRecorder
 import android.os.Build
@@ -29,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import biz.moapp.transcription_app.ui.theme.compose.OperationButton
+import biz.moapp.transcription_app.ui.state.MainUiState
+import biz.moapp.transcription_app.ui.state.UIState
+import biz.moapp.transcription_app.ui.compose.OperationButton
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
