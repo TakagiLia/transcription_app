@@ -5,11 +5,11 @@ import android.media.MediaRecorder
 
 interface AudioUseCase {
 
-    fun recordingStart(recorder: MediaRecorder)
+    fun recordingStart(recorder: MediaRecorder, filePath : String)
 
     fun recordingStop(recorder: MediaRecorder)
 
-    fun audioPlay(): MediaPlayer
+    fun audioPlay(filePath:String): MediaPlayer
 
     fun audioStop(mediaPlayer: MediaPlayer)
 }

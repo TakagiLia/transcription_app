@@ -2,6 +2,10 @@ package biz.moapp.transcription_app.hilt
 
 import biz.moapp.transcription_app.network.OpenAiDataSource
 import biz.moapp.transcription_app.network.RetrofitOpenAiNetwork
+import biz.moapp.transcription_app.usecase.AudioUseCase
+import biz.moapp.transcription_app.usecase.AudioUseCaseImpl
+import biz.moapp.transcription_app.usecase.FirebaseUseCase
+import biz.moapp.transcription_app.usecase.FirebaseUseCaseImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -23,6 +27,18 @@ abstract class AppBindsModule {
 @Module
 @InstallIn(SingletonComponent::class)
 class AppProvideModule {
+
+    @Provides
+    @Singleton
+    fun provideAudioUseCase(): AudioUseCase {
+        return AudioUseCaseImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUseCase(): FirebaseUseCase {
+        return FirebaseUseCaseImpl()
+    }
 
     @Singleton
     @Provides

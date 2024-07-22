@@ -1,18 +1,13 @@
 package biz.moapp.transcription_app.usecase
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.util.Log
-import javax.inject.Inject
 
-class AudioUseCaseImpl@Inject constructor(
-    context: Context
-)  :AudioUseCase {
+class AudioUseCaseImpl :AudioUseCase {
 
-    private val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
+    override fun recordingStart(recorder: MediaRecorder, filePath:String) {
 
-    override fun recordingStart(recorder: MediaRecorder) {
         recorder.apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
@@ -28,7 +23,8 @@ class AudioUseCaseImpl@Inject constructor(
         recorder.reset()
     }
 
-    override fun audioPlay(): MediaPlayer{
+    override fun audioPlay(filePath:String): MediaPlayer{
+
         return MediaPlayer().apply {
             try {
                 setDataSource(filePath)
