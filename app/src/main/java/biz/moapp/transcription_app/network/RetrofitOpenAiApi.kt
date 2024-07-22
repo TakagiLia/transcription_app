@@ -12,6 +12,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,7 +29,7 @@ private const val OPEN_AI_API_BASE_URL = BuildConfig.OPENAI_BASE_URL
 class RetrofitOpenAiNetwork @Inject constructor(moshi: Moshi):OpenAiDataSource{
 
     /**HTTP通信ライブラリ(OkHttp)を使って、HTTPリクエストとレスポンスの内容をログに出力するための設定**/
-    val client = OkHttpClient.Builder().apply {
+    val client = OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS).apply {
         val interceptor = HttpLoggingInterceptor().apply {
             /**ログレベルの設定**/
             level = HttpLoggingInterceptor.Level.BODY
@@ -55,11 +56,11 @@ class RetrofitOpenAiNetwork @Inject constructor(moshi: Moshi):OpenAiDataSource{
     }
 
     fun createJson(message: String) = ChatCompletions.Request(
-        model = "gpt-4o",
+        model = "gpt-4o-mini",
         messages = listOf(
             ChatMessage(
                 role = "user",
-                content = "Please summarize the following sentence and reply in Japanese.：$message"
+                content = "Please summarize the discussions at the following meetings and prepare minutes in Japanese.\n $message"
             ),
         ),
     )
