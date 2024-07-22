@@ -1,17 +1,16 @@
 package biz.moapp.transcription_app.hilt
 
-import android.content.Context
 import biz.moapp.transcription_app.network.OpenAiDataSource
 import biz.moapp.transcription_app.network.RetrofitOpenAiNetwork
 import biz.moapp.transcription_app.usecase.AudioUseCase
 import biz.moapp.transcription_app.usecase.AudioUseCaseImpl
+import biz.moapp.transcription_app.usecase.FirebaseUseCase
+import biz.moapp.transcription_app.usecase.FirebaseUseCaseImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -23,10 +22,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class AppBindsModule {
 
-    @Binds
-    @Singleton
-    abstract fun bindAudioUseCase(impl: AudioUseCaseImpl): AudioUseCase
-
 }
 
 @Module
@@ -35,8 +30,14 @@ class AppProvideModule {
 
     @Provides
     @Singleton
-    fun provideApplicationContext(@ApplicationContext app: Context): Context {
-        return app
+    fun provideAudioUseCase(): AudioUseCase {
+        return AudioUseCaseImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUseCase(): FirebaseUseCase {
+        return FirebaseUseCaseImpl()
     }
 
     @Singleton
