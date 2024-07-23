@@ -35,7 +35,7 @@ import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 @Composable
 fun SummaryEditScreen(mainScreenViewModel: MainScreenViewModel, onNavigateToMain: () -> Unit){
 
-    var text by remember { mutableStateOf(mainScreenViewModel.AudioText.value) }
+    var text by remember { mutableStateOf(mainScreenViewModel.summaryText.value) }
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -60,7 +60,7 @@ fun SummaryEditScreen(mainScreenViewModel: MainScreenViewModel, onNavigateToMain
                 BasicTextField(
                     value = text,
                     onValueChange = { text = it
-                        mainScreenViewModel.setAudioText(it) },
+                        mainScreenViewModel.setSummaryText(it) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp),

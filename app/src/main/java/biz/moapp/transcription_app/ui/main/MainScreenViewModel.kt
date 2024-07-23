@@ -35,6 +35,13 @@ class MainScreenViewModel@Inject constructor(
     private val firebaseUseCase: FirebaseUseCase
 ): ViewModel() {
 
+    val contentMock =
+        "**議題1: 少子化に関する問題点**\n" +
+                "**議論内容:**\n" +
+                "少子化が引き起こす問題として、労働力不足、将来の年金や社会保障制度の維持が困難になること、経済成長の鈍化といった問題が挙げられた。**議題2: 高齢化に関する問題点**\n" +
+                "**議論内容:**\n" +
+                "介護が必要な高齢者が増える一方で、介護人材の不足が深刻な問題となっている。"
+
     var uiState by mutableStateOf(MainUiState())
         private set
 
@@ -43,10 +50,16 @@ class MainScreenViewModel@Inject constructor(
     private val _mainScreenUiState = MutableStateFlow<UIState<TranscriptionResponse>>(UIState.NotYet)
     val mainScreenUiState: StateFlow<UIState<TranscriptionResponse>> = _mainScreenUiState.asStateFlow()
 
-    private val _AudioText = MutableStateFlow<String>("")
-    val AudioText: StateFlow<String> = _AudioText.asStateFlow()
+    private val _audioText = MutableStateFlow<String>("")
+    val audioText: StateFlow<String> = _audioText.asStateFlow()
     fun setAudioText(text : String){
-        _AudioText.value = text
+        _audioText.value = text
+    }
+
+    private val _summaryText = MutableStateFlow<String>("")
+    val summaryText: StateFlow<String> = _summaryText.asStateFlow()
+    fun setSummaryText(text : String){
+        _summaryText.value = text
     }
 
     var mediaPlayer: MediaPlayer? by mutableStateOf(null)
@@ -62,6 +75,7 @@ class MainScreenViewModel@Inject constructor(
                 uiState = when (result) {
                     /**成功時**/
                     is ChatCompletions.Response.Success -> {
+                        result.choices.map { value -> value.message?.content?.let{ _summaryText.value = it} }
                         Log.d("--result response１-","${result.choices.map { it.message?.content }}")
                         uiState.copy(
                             sendResultState = MainUiState.SendResultState.Success(
@@ -91,7 +105,7 @@ class MainScreenViewModel@Inject constructor(
             try{
                 openAiAudioApi.completions(filePath)?.let { response ->
                     _mainScreenUiState.value = UIState.Success(response)
-                    _AudioText.value = mockText
+                    _audioText.value = mockText
                 }
 
             }catch(e:Exception){

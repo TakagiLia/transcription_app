@@ -95,17 +95,32 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(4.dp)
                         )
-                        Text(text = value, color = systemColor,
+                        Text(text = mainScreenViewModel.summaryText.value, color = systemColor,
                             style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                             modifier = Modifier.padding(4.dp)
                         )
                     }
-                    /**要約した内容の保存**/
-                    OperationButton(
-                        modifier = maxModifierButton,
-                        buttonName = "save",
-                        clickAction = { mainScreenViewModel.summarySave(value) }
-                    )
+                    Row(modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ){
+
+                        /**要約した内容の保存**/
+                        OperationButton(
+                            modifier = Modifier.weight(0.5f),
+                            buttonName = "save",
+                            clickAction = { mainScreenViewModel.summarySave(value) }
+                        )
+
+                        /**編集ボタン**/
+                        OperationButton(
+                            modifier = Modifier.weight(0.5f),
+                            buttonName = "Edit Text",
+                            clickAction = {
+                                onNavigateToEdit()
+                            }
+                        )
+
+                    }
                 }
             }
             is MainUiState.SendResultState.Error -> {}
@@ -133,34 +148,20 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
 
                     Spacer(modifier = Modifier.height(1.dp))
 
-                    Text(text = mainScreenViewModel.AudioText.value,
+                    Text(text = mainScreenViewModel.audioText.value,
                         color = systemColor,
                         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                         modifier = Modifier.padding(4.dp))
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ){
-
                     /**要約ボタン**/
                     OperationButton(
-                        modifier = Modifier.weight(0.5f),
+                        modifier = maxModifierButton,
                         buttonName = "Summary Text",
                         clickAction = {
-                            mainScreenViewModel.summary(mainScreenViewModel.AudioText.value)
+                            mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
                         }
                     )
-
-                    /**編集ボタン**/
-                    OperationButton(
-                        modifier = Modifier.weight(0.5f),
-                        buttonName = "Edit Text",
-                        clickAction = {
-                            onNavigateToEdit()
-                        }
-                    )
-                }
             }
             is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
