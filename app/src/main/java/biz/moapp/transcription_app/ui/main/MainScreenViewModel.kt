@@ -43,7 +43,12 @@ class MainScreenViewModel@Inject constructor(
     private val _mainScreenUiState = MutableStateFlow<UIState<TranscriptionResponse>>(UIState.NotYet)
     val mainScreenUiState: StateFlow<UIState<TranscriptionResponse>> = _mainScreenUiState.asStateFlow()
 
-    var transcriptionText by mutableStateOf("")
+    private val _AudioText = MutableStateFlow<String>("")
+    val AudioText: StateFlow<String> = _AudioText.asStateFlow()
+    fun setAudioText(text : String){
+        _AudioText.value = text
+    }
+
     var mediaPlayer: MediaPlayer? by mutableStateOf(null)
 
     fun summary(message: String){
@@ -86,7 +91,7 @@ class MainScreenViewModel@Inject constructor(
             try{
                 openAiAudioApi.completions(filePath)?.let { response ->
                     _mainScreenUiState.value = UIState.Success(response)
-                    transcriptionText = response.text
+                    _AudioText.value = mockText
                 }
 
             }catch(e:Exception){

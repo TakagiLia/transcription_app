@@ -133,7 +133,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
 
                     Spacer(modifier = Modifier.height(1.dp))
 
-                    Text(text = mainScreenViewModel.transcriptionText,
+                    Text(text = mainScreenViewModel.AudioText.value,
                         color = systemColor,
                         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                         modifier = Modifier.padding(4.dp))
@@ -148,7 +148,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                         modifier = Modifier.weight(0.5f),
                         buttonName = "Summary Text",
                         clickAction = {
-                            mainScreenViewModel.summary(mainScreenViewModel.transcriptionText)
+                            mainScreenViewModel.summary(mainScreenViewModel.AudioText.value)
                         }
                     )
 
