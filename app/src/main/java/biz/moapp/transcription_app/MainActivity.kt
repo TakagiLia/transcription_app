@@ -16,8 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.main.MainScreen
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
+import biz.moapp.transcription_app.ui.summaryedit.SummaryEditScreen
 import biz.moapp.transcription_app.ui.theme.Transcription_appTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,14 +39,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             val mainScreenViewModel: MainScreenViewModel by viewModels()
             Transcription_appTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val granted = ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
+                val granted = ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
 
-                    if (granted != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
+                if (granted != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
+                }
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
+                    composable(route = Nav.MainScreen.name) {
+                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,
+                                onNavigateToEdit = { navController.navigate(Nav.SummaryEditScreen.name) })
+                        }
+                    }
+                    composable(route = Nav.SummaryEditScreen.name) {
+                       SummaryEditScreen(mainScreenViewModel,
+                           onNavigateToMain = { navController.navigate(Nav.MainScreen.name) })
                     }
 
-                    MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel)
                 }
             }
         }
