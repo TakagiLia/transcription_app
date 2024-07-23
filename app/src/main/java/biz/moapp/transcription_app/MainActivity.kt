@@ -1,47 +1,73 @@
 package biz.moapp.transcription_app
 
+import android.Manifest.permission.RECORD_AUDIO
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import biz.moapp.transcription_app.navigation.Nav
+import biz.moapp.transcription_app.ui.main.MainScreen
+import biz.moapp.transcription_app.ui.main.MainScreenViewModel
+import biz.moapp.transcription_app.ui.summaryedit.SummaryEditScreen
 import biz.moapp.transcription_app.ui.theme.Transcription_appTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        /**アプリが起動している間は画面がロックされないようにしている**/
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         setContent {
+            val mainScreenViewModel: MainScreenViewModel by viewModels()
             Transcription_appTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val granted = ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
+
+                if (granted != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
+                }
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
+                    composable(route = Nav.MainScreen.name) {
+                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,
+                                onNavigateToEdit = { navController.navigate(Nav.SummaryEditScreen.name) })
+                        }
+                    }
+                    composable(route = Nav.SummaryEditScreen.name) {
+                       SummaryEditScreen(mainScreenViewModel,
+                           onNavigateToMain = { navController.navigate(Nav.MainScreen.name) })
+                    }
+
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Transcription_appTheme {
-        Greeting("Android")
+    companion object {
+        private const val PERMISSIONS_RECORD_AUDIO = 1000
     }
 }
