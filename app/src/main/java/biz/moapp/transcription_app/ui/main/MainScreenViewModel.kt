@@ -42,6 +42,7 @@ class MainScreenViewModel@Inject constructor(
                 "**議論内容:**\n" +
                 "介護が必要な高齢者が増える一方で、介護人材の不足が深刻な問題となっている。"
 
+
     var uiState by mutableStateOf(MainUiState())
         private set
 
@@ -76,6 +77,7 @@ class MainScreenViewModel@Inject constructor(
                     /**成功時**/
                     is ChatCompletions.Response.Success -> {
                         result.choices.map { value -> value.message?.content?.let{ _summaryText.value = it} }
+
                         Log.d("--result response１-","${result.choices.map { it.message?.content }}")
                         uiState.copy(
                             sendResultState = MainUiState.SendResultState.Success(
@@ -105,6 +107,7 @@ class MainScreenViewModel@Inject constructor(
             try{
                 openAiAudioApi.completions(filePath)?.let { response ->
                     _mainScreenUiState.value = UIState.Success(response)
+
                     _audioText.value = mockText
                 }
 

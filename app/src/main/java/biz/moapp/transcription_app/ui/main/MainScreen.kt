@@ -1,5 +1,6 @@
 package biz.moapp.transcription_app.ui.main
 
+
 import android.annotation.SuppressLint
 import android.media.MediaRecorder
 import android.os.Build
@@ -40,10 +41,12 @@ import biz.moapp.transcription_app.ui.state.MainUiState
 import biz.moapp.transcription_app.ui.state.UIState
 import biz.moapp.transcription_app.ui.compose.OperationButton
 
+
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onNavigateToEdit: () -> Unit){
+
     var speechStatus = remember { mutableStateOf("No Speech") }
     var isRecording by remember { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
@@ -132,7 +135,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             is UIState.Loading -> {CircularProgressIndicator()}
             is UIState.Success -> {
                 Spacer(modifier = Modifier.height(5.dp))
-
                 OutlinedCard(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface,

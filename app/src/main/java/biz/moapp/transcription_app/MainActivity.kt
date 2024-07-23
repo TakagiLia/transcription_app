@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                        SummaryEditScreen(mainScreenViewModel,
                            onNavigateToMain = { navController.navigate(Nav.MainScreen.name) })
                     }
+
                 }
             }
         }
