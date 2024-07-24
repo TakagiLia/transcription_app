@@ -54,10 +54,14 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
     var isPlaying by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
-    var isSummaryButtonVisible by remember { mutableStateOf(true) }
     val convertTextButtonState = remember {
         MutableTransitionState(true).apply {
             targetState = false
+        }
+    }
+    val summaryButtonState = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
         }
     }
     val context = LocalContext.current
@@ -92,8 +96,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                 CircularProgressIndicator()
             }
             is MainUiState.SendResultState.Success -> {
-                /**要約ボタン非表示**/
-                isSummaryButtonVisible = false
                 (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
                     Log.d("--result response：　",value)
                     OutlinedCard(
@@ -154,39 +156,46 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             is UIState.NotYet -> {}
             is UIState.Loading -> {CircularProgressIndicator()}
             is UIState.Success -> {
-
+                AnimatedVisibility(visibleState = summaryButtonState) {
                 Spacer(modifier = Modifier.height(5.dp))
-                OutlinedCard(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    ),
-                    border = BorderStroke(1.dp, systemColor),
-                    modifier = Modifier
-                            .fillMaxSize(),
-                ) {
-                    Text(text = "録音した内容",
-                        color = systemColor,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(4.dp))
+                    Column {
+                        OutlinedCard(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                            ),
+                            border = BorderStroke(1.dp, systemColor),
+                            modifier = Modifier
+                                .fillMaxSize(),
+                        ) {
 
-                    Spacer(modifier = Modifier.height(1.dp))
+                            Text(
+                                text = "録音した内容",
+                                color = systemColor,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(4.dp)
+                            )
 
-                    Text(text = mainScreenViewModel.audioText.value,
-                        color = systemColor,
-                        style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                        modifier = Modifier.padding(4.dp))
-                }
-                    AnimatedVisibility(isSummaryButtonVisible) {
+                            Spacer(modifier = Modifier.height(1.dp))
+
+                            Text(
+                                text = mainScreenViewModel.audioText.value,
+                                color = systemColor,
+                                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                modifier = Modifier.padding(4.dp)
+                            )
+                        }
                         /**要約ボタン**/
                         OperationButton(
                             modifier = maxModifierButton,
                             buttonName = "Summary Text",
-                            enabled = isSummaryButtonVisible,
                             clickAction = {
                                 mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
+                                /**要約ボタン非表示**/
+                                summaryButtonState.targetState = !summaryButtonState.currentState
                             }
                         )
                     }
+                }
             }
             is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
@@ -204,6 +213,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                     isAudioPlayButtonVisible = false
                     /**テキスト変換ボタン非表示**/
                     convertTextButtonState.targetState = !convertTextButtonState.currentState
+                    /**要約ボタン表示**/
+                    summaryButtonState.targetState = !summaryButtonState.currentState
                 }
             )
         }
