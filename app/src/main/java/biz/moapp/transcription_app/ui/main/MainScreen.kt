@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -52,9 +53,13 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
     var isRecording by remember { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
-    var isConvertButtonVisible by remember { mutableStateOf(false) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
     var isSummaryButtonVisible by remember { mutableStateOf(true) }
+    val convertTextButtonState = remember {
+        MutableTransitionState(true).apply {
+            targetState = false
+        }
+    }
     val context = LocalContext.current
     val recorder = remember { MediaRecorder(context) }
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
@@ -149,8 +154,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             is UIState.NotYet -> {}
             is UIState.Loading -> {CircularProgressIndicator()}
             is UIState.Success -> {
-                /**テキスト変換ボタン非表示**/
-                isConvertButtonVisible = false
 
                 Spacer(modifier = Modifier.height(5.dp))
                 OutlinedCard(
@@ -189,17 +192,18 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
         }
 
         /**テキスト変換ボタン**/
-        AnimatedVisibility(isConvertButtonVisible) {
+        AnimatedVisibility(visibleState = convertTextButtonState) {
             OperationButton(
                 modifier = maxModifierButton,
                 buttonName = "Convert Text",
-                enabled = isConvertButtonVisible,
                 clickAction = {
                     mainScreenViewModel.openAiAudioApi(filePath)
                     /**レコーディング操作ボタン非表示**/
                     isAudioButtonVisible = false
                     /**オーディオ操作ボタン非表示**/
                     isAudioPlayButtonVisible = false
+                    /**テキスト変換ボタン非表示**/
+                    convertTextButtonState.targetState = !convertTextButtonState.currentState
                 }
             )
         }
@@ -219,7 +223,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                             mainScreenViewModel.recordingStart(recorder,filePath)
                         }else{
                             /**Convert Textボタン表示**/
-                            isConvertButtonVisible = true
+                            convertTextButtonState.targetState = !convertTextButtonState.currentState
                             /**オーディオ操作ボタン表示**/
                             isAudioPlayButtonVisible = true
                             /**レコーディング停止**/
