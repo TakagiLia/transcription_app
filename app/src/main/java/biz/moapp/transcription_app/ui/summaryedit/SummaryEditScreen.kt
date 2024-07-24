@@ -67,7 +67,7 @@ fun SummaryEditScreen(mainScreenViewModel: MainScreenViewModel, onNavigateToMain
                     textStyle = TextStyle(color = systemColor)
                 )
             }
-            OperationButton(Modifier.fillMaxWidth(),"save") { onNavigateToMain() }
+            OperationButton(modifier = Modifier.fillMaxWidth(),buttonName = "save",) { onNavigateToMain() }
         }
 
     }
