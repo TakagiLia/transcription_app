@@ -146,7 +146,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                                     buttonName = "Reset",
                                     clickAction = {
                                         isAudioButtonVisible = true
-                                        /**要約エリア表示**/
+                                        /**要約エリア非表示**/
                                         summaryAreaState.targetState = !summaryAreaState.currentState
                                     }
                                 )
@@ -203,7 +203,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                             buttonName = "Summary Text",
                             clickAction = {
                                 mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
-                                /**要約ボタン非表示**/
+                                /**文字起こしエリア非表示**/
                                 convertTextAreaState.targetState = !convertTextAreaState.currentState
                                 /**要約エリア表示**/
                                 summaryAreaState.targetState = !summaryAreaState.currentState
@@ -228,7 +228,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                     isAudioPlayButtonVisible = false
                     /**テキスト変換ボタン非表示**/
                     convertTextButtonState.targetState = !convertTextButtonState.currentState
-                    /**要約ボタン表示**/
+                    /**文字起こしエリア表示**/
                     convertTextAreaState.targetState = !convertTextAreaState.currentState
                 }
             )
