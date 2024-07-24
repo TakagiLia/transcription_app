@@ -84,11 +84,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
         .height(80.dp)
 
     /**UI**/
-    Column(modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top) {
-        Text(text = speechStatus.value, color = Color.Magenta)
-    }
-
     Column(modifier = modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState()),
