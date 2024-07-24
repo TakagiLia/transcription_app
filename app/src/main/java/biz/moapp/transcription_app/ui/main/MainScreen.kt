@@ -54,6 +54,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isConvertButtonVisible by remember { mutableStateOf(false) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
+    var isSummaryButtonVisible by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val recorder = remember { MediaRecorder(context) }
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
@@ -86,6 +87,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                 CircularProgressIndicator()
             }
             is MainUiState.SendResultState.Success -> {
+                /**要約ボタン非表示**/
+                isSummaryButtonVisible = false
                 (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
                     Log.d("--result response：　",value)
                     OutlinedCard(
@@ -162,15 +165,17 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                         style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                         modifier = Modifier.padding(4.dp))
                 }
-
-                    /**要約ボタン**/
-                    OperationButton(
-                        modifier = maxModifierButton,
-                        buttonName = "Summary Text",
-                        clickAction = {
-                            mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
-                        }
-                    )
+                    AnimatedVisibility(isSummaryButtonVisible) {
+                        /**要約ボタン**/
+                        OperationButton(
+                            modifier = maxModifierButton,
+                            buttonName = "Summary Text",
+                            enabled = isSummaryButtonVisible,
+                            clickAction = {
+                                mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
+                            }
+                        )
+                    }
             }
             is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
