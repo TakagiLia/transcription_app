@@ -39,6 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
+import biz.moapp.transcription_app.ui.compose.EditField
 import biz.moapp.transcription_app.ui.state.MainUiState
 import biz.moapp.transcription_app.ui.state.UIState
 import biz.moapp.transcription_app.ui.compose.OperationButton
@@ -54,6 +55,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
     var isPlaying by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
+    var isEditable by remember { mutableStateOf(false) }
     val convertTextButtonState = remember {
         MutableTransitionState(true).apply {
             targetState = false
@@ -119,12 +121,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(4.dp)
                                 )
-                                Text(
-                                    text = mainScreenViewModel.summaryText.value,
-                                    color = systemColor,
-                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                    modifier = Modifier.padding(4.dp)
-                                )
+                                EditField(mainScreenViewModel,isEditable)
                             }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -134,9 +131,9 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                                 /**編集ボタン**/
                                 OperationButton(
                                     modifier = Modifier.weight(0.5f),
-                                    buttonName = "Edit Text",
+                                    buttonName = if(!isEditable) "Edit Text" else "Change Text",
                                     clickAction = {
-                                        onNavigateToEdit()
+                                        isEditable = !isEditable
                                     }
                                 )
 
