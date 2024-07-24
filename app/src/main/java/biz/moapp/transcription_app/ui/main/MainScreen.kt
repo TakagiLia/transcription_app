@@ -59,7 +59,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             targetState = false
         }
     }
-    val summaryButtonState = remember {
+    val convertTextAreaState = remember {
         MutableTransitionState(false).apply {
             targetState = true
         }
@@ -156,7 +156,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             is UIState.NotYet -> {}
             is UIState.Loading -> {CircularProgressIndicator()}
             is UIState.Success -> {
-                AnimatedVisibility(visibleState = summaryButtonState) {
+                AnimatedVisibility(visibleState = convertTextAreaState) {
                 Spacer(modifier = Modifier.height(5.dp))
                     Column {
                         OutlinedCard(
@@ -191,7 +191,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                             clickAction = {
                                 mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
                                 /**要約ボタン非表示**/
-                                summaryButtonState.targetState = !summaryButtonState.currentState
+                                convertTextAreaState.targetState = !convertTextAreaState.currentState
                             }
                         )
                     }
@@ -214,7 +214,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                     /**テキスト変換ボタン非表示**/
                     convertTextButtonState.targetState = !convertTextButtonState.currentState
                     /**要約ボタン表示**/
-                    summaryButtonState.targetState = !summaryButtonState.currentState
+                    convertTextAreaState.targetState = !convertTextAreaState.currentState
                 }
             )
         }
