@@ -138,6 +138,9 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             is UIState.NotYet -> {}
             is UIState.Loading -> {CircularProgressIndicator()}
             is UIState.Success -> {
+                /**テキスト変換ボタン非表示**/
+                isConvertButtonVisible = false
+
                 Spacer(modifier = Modifier.height(5.dp))
                 OutlinedCard(
                     colors = CardDefaults.cardColors(
@@ -173,17 +176,20 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
         }
 
         /**テキスト変換ボタン**/
-        OperationButton(
-            modifier = maxModifierButton,
-            buttonName = "Convert Text",
-            enabled = isConvertButtonVisible,
-            clickAction = { mainScreenViewModel.openAiAudioApi(filePath)
-                /**レコーディング操作ボタン非表示**/
-                isAudioButtonVisible = false
-                /**オーディオ操作ボタン非表示**/
-                isAudioPlayButtonVisible = false
-            }
-        )
+        AnimatedVisibility(isConvertButtonVisible) {
+            OperationButton(
+                modifier = maxModifierButton,
+                buttonName = "Convert Text",
+                enabled = isConvertButtonVisible,
+                clickAction = {
+                    mainScreenViewModel.openAiAudioApi(filePath)
+                    /**レコーディング操作ボタン非表示**/
+                    isAudioButtonVisible = false
+                    /**オーディオ操作ボタン非表示**/
+                    isAudioPlayButtonVisible = false
+                }
+            )
+        }
 
         AnimatedVisibility(isAudioButtonVisible) {
             Row(modifier = Modifier.fillMaxWidth(),
