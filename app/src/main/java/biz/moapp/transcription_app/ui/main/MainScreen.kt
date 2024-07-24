@@ -263,7 +263,12 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                     buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
                     enabled = isAudioPlayButtonVisible,
                     clickAction = {
-                        mainScreenViewModel.audioPlay(filePath)
+                        isPlaying = !isPlaying
+                        if(isPlaying){
+                            mainScreenViewModel.audioPlay(filePath)
+                        }else{
+                            mainScreenViewModel.audioStop()
+                        }
                     }
                 )
             }
