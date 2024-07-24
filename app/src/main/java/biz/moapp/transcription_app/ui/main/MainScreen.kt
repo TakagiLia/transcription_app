@@ -53,6 +53,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
     var isPlaying by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isConvertButtonVisible by remember { mutableStateOf(false) }
+    var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val recorder = remember { MediaRecorder(context) }
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
@@ -179,6 +180,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             clickAction = { mainScreenViewModel.openAiAudioApi(filePath)
                 /**レコーディング操作ボタン非表示**/
                 isAudioButtonVisible = false
+                /**オーディオ操作ボタン非表示**/
+                isAudioPlayButtonVisible = false
             }
         )
 
@@ -198,6 +201,9 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                         }else{
                             /**Convert Textボタン表示**/
                             isConvertButtonVisible = true
+                            /**オーディオ操作ボタン表示**/
+                            isAudioPlayButtonVisible = true
+                            /**レコーディング停止**/
                             mainScreenViewModel.recordingStop(recorder)
                         }
                     })
@@ -206,7 +212,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                 OperationButton(
                     modifier = Modifier.weight(0.5f),
                     buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
-                    enabled = isAudioButtonVisible,
+                    enabled = isAudioPlayButtonVisible,
                     clickAction = {
                         mainScreenViewModel.audioPlay(filePath)
                     }
