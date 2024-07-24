@@ -11,10 +11,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OperationButton(modifier: Modifier, buttonName : String, clickAction:() -> Unit){
+fun OperationButton(modifier: Modifier, enabled: Boolean = true, buttonName : String, clickAction:() -> Unit){
     Button(modifier = modifier
         .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
+        enabled = enabled,
         border = BorderStroke(1.dp, Color.Black),
         onClick = {clickAction()}){
         Text(modifier = Modifier.padding(8.dp), text = buttonName)
