@@ -6,6 +6,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +51,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
     var speechStatus = remember { mutableStateOf("No Speech") }
     var isRecording by remember { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
+    var isAudioButtonVisible by remember { mutableStateOf(true) }
     val context = LocalContext.current
     val recorder = remember { MediaRecorder(context) }
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
@@ -172,33 +174,38 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
         OperationButton(
             modifier = maxModifierButton,
             buttonName = "Convert Text",
-            clickAction = { mainScreenViewModel.openAiAudioApi(filePath) }
+            clickAction = { mainScreenViewModel.openAiAudioApi(filePath)
+                isAudioButtonVisible = false}
         )
 
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ){
-            /**レコード操作ボタン**/
-            OperationButton(
-                modifier = Modifier.weight(0.5f),
-                buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
-                clickAction = {
-                    isRecording = !isRecording
-                    if (isRecording) {
-                        mainScreenViewModel.recordingStart(recorder,filePath)
-                    }else{
-                        mainScreenViewModel.recordingStop(recorder)
-                    }
-                })
+        AnimatedVisibility(isAudioButtonVisible) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ){
+                /**レコード操作ボタン**/
+                OperationButton(
+                    modifier = Modifier.weight(0.5f),
+                    buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
+                    enabled = isAudioButtonVisible,
+                    clickAction = {
+                        isRecording = !isRecording
+                        if (isRecording) {
+                            mainScreenViewModel.recordingStart(recorder,filePath)
+                        }else{
+                            mainScreenViewModel.recordingStop(recorder)
+                        }
+                    })
 
-            /**オーディオ操作ボタン**/
-            OperationButton(
-                modifier = Modifier.weight(0.5f),
-                buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
-                clickAction = {
-                    mainScreenViewModel.audioPlay(filePath)
-                }
-            )
+                /**オーディオ操作ボタン**/
+                OperationButton(
+                    modifier = Modifier.weight(0.5f),
+                    buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
+                    enabled = isAudioButtonVisible,
+                    clickAction = {
+                        mainScreenViewModel.audioPlay(filePath)
+                    }
+                )
+            }
         }
     }
 }
