@@ -114,13 +114,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                         horizontalArrangement = Arrangement.Center
                     ){
 
-                        /**要約した内容の保存**/
-                        OperationButton(
-                            modifier = Modifier.weight(0.5f),
-                            buttonName = "save",
-                            clickAction = { mainScreenViewModel.summarySave(value) }
-                        )
-
                         /**編集ボタン**/
                         OperationButton(
                             modifier = Modifier.weight(0.5f),
@@ -130,7 +123,22 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                             }
                         )
 
+                        /**リセットボタン**/
+                        OperationButton(
+                            modifier = Modifier.weight(0.5f),
+                            buttonName = "Reset",
+                            clickAction = {
+
+                            }
+                        )
+
                     }
+                    /**要約した内容の保存**/
+                    OperationButton(
+                        modifier = maxModifierButton,
+                        buttonName = "save",
+                        clickAction = { mainScreenViewModel.summarySave(value) }
+                    )
                 }
             }
             is MainUiState.SendResultState.Error -> {}
