@@ -64,6 +64,11 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             targetState = true
         }
     }
+    val summaryAreaState = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
     val context = LocalContext.current
     val recorder = remember { MediaRecorder(context) }
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
@@ -97,55 +102,63 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
             }
             is MainUiState.SendResultState.Success -> {
                 (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
-                    Log.d("--result response：　",value)
-                    OutlinedCard(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
-                        border = BorderStroke(1.dp, systemColor),
-                        modifier = Modifier
-                            .fillMaxSize(),
-                    ) {
-                        Text(
-                            text = "要約した内容",
-                            color = systemColor,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(4.dp)
-                        )
-                        Text(text = mainScreenViewModel.summaryText.value, color = systemColor,
-                            style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                            modifier = Modifier.padding(4.dp)
-                        )
-                    }
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ){
-
-                        /**編集ボタン**/
-                        OperationButton(
-                            modifier = Modifier.weight(0.5f),
-                            buttonName = "Edit Text",
-                            clickAction = {
-                                onNavigateToEdit()
+                    Log.d("--result response：　", value)
+                    AnimatedVisibility(visibleState = summaryAreaState) {
+                        Column {
+                            OutlinedCard(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                ),
+                                border = BorderStroke(1.dp, systemColor),
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                            ) {
+                                Text(
+                                    text = "要約した内容",
+                                    color = systemColor,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(4.dp)
+                                )
+                                Text(
+                                    text = mainScreenViewModel.summaryText.value,
+                                    color = systemColor,
+                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                    modifier = Modifier.padding(4.dp)
+                                )
                             }
-                        )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
 
-                        /**リセットボタン**/
-                        OperationButton(
-                            modifier = Modifier.weight(0.5f),
-                            buttonName = "Reset",
-                            clickAction = {
+                                /**編集ボタン**/
+                                OperationButton(
+                                    modifier = Modifier.weight(0.5f),
+                                    buttonName = "Edit Text",
+                                    clickAction = {
+                                        onNavigateToEdit()
+                                    }
+                                )
 
+                                /**リセットボタン**/
+                                OperationButton(
+                                    modifier = Modifier.weight(0.5f),
+                                    buttonName = "Reset",
+                                    clickAction = {
+                                        isAudioButtonVisible = true
+                                        /**要約エリア表示**/
+                                        summaryAreaState.targetState = !summaryAreaState.currentState
+                                    }
+                                )
                             }
-                        )
-
+                            /**要約した内容の保存**/
+                            OperationButton(
+                                modifier = maxModifierButton,
+                                buttonName = "save",
+                                clickAction = { mainScreenViewModel.summarySave(value) }
+                            )
+                        }
                     }
-                    /**要約した内容の保存**/
-                    OperationButton(
-                        modifier = maxModifierButton,
-                        buttonName = "save",
-                        clickAction = { mainScreenViewModel.summarySave(value) }
-                    )
                 }
             }
             is MainUiState.SendResultState.Error -> {}
@@ -192,6 +205,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                                 mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
                                 /**要約ボタン非表示**/
                                 convertTextAreaState.targetState = !convertTextAreaState.currentState
+                                /**要約エリア表示**/
+                                summaryAreaState.targetState = !summaryAreaState.currentState
                             }
                         )
                     }
