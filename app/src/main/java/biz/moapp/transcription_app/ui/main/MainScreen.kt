@@ -246,10 +246,12 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
                     clickAction = {
                         isRecording = !isRecording
                         if (isRecording) {
+                            /**Convert Textボタン非表示**/
+                            convertTextButtonState.targetState = false
                             mainScreenViewModel.recordingStart(recorder,filePath)
                         }else{
                             /**Convert Textボタン表示**/
-                            convertTextButtonState.targetState = !convertTextButtonState.currentState
+                            convertTextButtonState.targetState = true
                             /**オーディオ操作ボタン表示**/
                             isAudioPlayButtonVisible = true
                             /**レコーディング停止**/
