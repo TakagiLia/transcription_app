@@ -162,6 +162,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                                         isAudioButtonVisible = true
                                         /**要約エリア非表示**/
                                         summaryAreaState.targetState = !summaryAreaState.currentState
+                                        /**内容の初期化**/
+                                        mainScreenViewModel.setSummaryText("")
                                     }
                                 )
                             }
