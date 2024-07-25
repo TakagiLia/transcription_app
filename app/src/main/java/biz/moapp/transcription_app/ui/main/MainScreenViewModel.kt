@@ -35,18 +35,8 @@ class MainScreenViewModel@Inject constructor(
     private val firebaseUseCase: FirebaseUseCase
 ): ViewModel() {
 
-    val contentMock =
-        "**議題1: 少子化に関する問題点**\n" +
-                "**議論内容:**\n" +
-                "少子化が引き起こす問題として、労働力不足、将来の年金や社会保障制度の維持が困難になること、経済成長の鈍化といった問題が挙げられた。**議題2: 高齢化に関する問題点**\n" +
-                "**議論内容:**\n" +
-                "介護が必要な高齢者が増える一方で、介護人材の不足が深刻な問題となっている。"
-
-
     var uiState by mutableStateOf(MainUiState())
         private set
-
-    val mockText = "最近、少子高齢化が深刻化してるってニュースでよく見るけど、実際どんな問題があるんだろう？そうだな、まず少子化は労働力不足を引き起こす。将来の年金や社会保障制度の維持も難しくなるし、経済成長も鈍化する恐れがある。私は高齢者福祉の現場にいるけど、介護が必要な高齢者が増える一方で、介護人材が不足してるのが深刻な問題だよ。確かに、ニュースで見たことある。じゃあ、どんな対策が必要なのかな？国や自治体では、子育て支援策を充実させて出生率を上げる取り組みをしてる。例えば、児童手当の拡充や保育サービスの充実とかね。だけど、経済的な支援だけでは解決できない問題もあると思う。子育てしやすい社会の雰囲気づくりも大切なんじゃないかな。具体的にはどんなこと？例えば、育児休暇を取りやすい職場環境を作ったり、地域で子育てをサポートする仕組みを作ったりすることかな。そうだな。あとは、若い世代が将来に希望を持てる社会にすることも重要だ。安定した雇用や結婚、子育てをしやすい環境を整える必要がある。高齢化についてはどうすればいいんだろう？高齢者が安心して暮らせる社会にするためには、介護サービスの充実や住みやすい街づくりが欠かせない。それと同時に、高齢者が社会参加できる機会を増やすことも大切だ。健康寿命を延ばして、元気な高齢者が活躍できる社会を目指すべきだと思う。なるほど、少子高齢化って複雑な問題なんだね。でも、みんなで協力して解決していく必要があるんだと感じたよ。その通りだ。少子高齢化は日本社会全体で取り組むべき課題だからね。私たち一人ひとりができることから始めて、未来のためにより良い社会を作っていきたいね。うん、私も自分にできることを考えて行動してみようと思う。今日は貴重な話を聞かせてくれてありがとう。こちらこそ、ありがとう。"
 
     private val _mainScreenUiState = MutableStateFlow<UIState<TranscriptionResponse>>(UIState.NotYet)
     val mainScreenUiState: StateFlow<UIState<TranscriptionResponse>> = _mainScreenUiState.asStateFlow()
@@ -107,8 +97,7 @@ class MainScreenViewModel@Inject constructor(
             try{
                 openAiAudioApi.completions(filePath)?.let { response ->
                     _mainScreenUiState.value = UIState.Success(response)
-
-                    _audioText.value = mockText
+                    _audioText.value = response.text
                 }
 
             }catch(e:Exception){
@@ -126,8 +115,9 @@ class MainScreenViewModel@Inject constructor(
         audioUseCase.recordingStop(recorder)
     }
 
-    fun audioPlay(filePath : String){
+    fun audioPlay(filePath : String) : MediaPlayer?{
         mediaPlayer = audioUseCase.audioPlay(filePath)
+        return mediaPlayer
     }
 
     fun audioStop(){
