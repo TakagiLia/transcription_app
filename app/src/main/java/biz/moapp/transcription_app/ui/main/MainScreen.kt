@@ -43,9 +43,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.ui.compose.EditField
+import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.state.MainUiState
 import biz.moapp.transcription_app.ui.state.UIState
-import biz.moapp.transcription_app.ui.compose.OperationButton
 import kotlinx.coroutines.delay
 
 
@@ -55,7 +55,6 @@ import kotlinx.coroutines.delay
 fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
 
     var isRecording by remember { mutableStateOf(false) }
-    var isPlaying by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
     var isEditable by remember { mutableStateOf(false) }
@@ -89,15 +88,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
         while (isRecording) {
             delay(1000)
             recordedTime += 1000
-        }
-    }
-
-    /**再生　時間を一秒ずつカウントアウト**/
-    LaunchedEffect(key1 = isPlaying) {
-        Log.d("--isPlaying", "recordedTime；$recordedTime")
-        while (isPlaying && recordedTime > 0) {
-            delay(1000)
-            recordedTime -= 1000
         }
     }
 
@@ -268,7 +258,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                 ) {
                     /**レコーディング操作ボタン**/
                     OperationButton(
-                        modifier = Modifier.weight(0.5f),
+                        modifier =maxModifierButton,
                         buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
                         enabled = isAudioButtonVisible,
                         clickAction = {
@@ -288,31 +278,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                                 mainScreenViewModel.recordingStop(recorder)
                             }
                         })
-
-                    /**オーディオ操作ボタン**/
-                    OperationButton(
-                        modifier = Modifier.weight(0.5f),
-                        buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
-                        enabled = isAudioPlayButtonVisible,
-                        clickAction = {
-                            isPlaying = !isPlaying
-                            /**Convert Textボタン非表示**/
-                            convertTextButtonState.targetState = false
-                            if(isPlaying){
-                                val mediaPlayer = mainScreenViewModel.audioPlay(filePath)
-                                /**再生時間を取得**/
-                                mediaPlayer?.duration?.let {
-                                    if(recordedTime <= 0L){
-                                        recordedTime =  it.toLong()
-                                    }
-                                }
-                            }else{
-                                /**Convert Textボタン表示**/
-                                convertTextButtonState.targetState = true
-                                mainScreenViewModel.audioStop()
-                            }
-                        }
-                    )
                 }
             }
         }
