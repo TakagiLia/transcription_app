@@ -248,6 +248,10 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                                 isAudioPlayButtonVisible = true
                                 /**レコーディング停止**/
                                 mainScreenViewModel.recordingStop(recorder)
+                                /**録音した内容を文字起こし**/
+                                mainScreenViewModel.openAiAudioApi(filePath)
+                                /**文字起こしエリア表示**/
+                                convertTextAreaState.targetState = !convertTextAreaState.currentState
                             }
                         })
                 }
