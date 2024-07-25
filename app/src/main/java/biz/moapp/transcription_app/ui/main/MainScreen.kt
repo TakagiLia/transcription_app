@@ -58,11 +58,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
     var isEditable by remember { mutableStateOf(false) }
-    val convertTextButtonState = remember {
-        MutableTransitionState(true).apply {
-            targetState = false
-        }
-    }
     val convertTextAreaState = remember {
         MutableTransitionState(false).apply {
             targetState = true
@@ -223,25 +218,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
             is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
 
-        /**テキスト変換ボタン**/
-        AnimatedVisibility(visibleState = convertTextButtonState) {
-            OperationButton(
-                modifier = maxModifierButton,
-                buttonName = "Convert Text",
-                clickAction = {
-                    mainScreenViewModel.openAiAudioApi(filePath)
-                    /**レコーディング操作ボタン非表示**/
-                    isAudioButtonVisible = false
-                    /**オーディオ操作ボタン非表示**/
-                    isAudioPlayButtonVisible = false
-                    /**テキスト変換ボタン非表示**/
-                    convertTextButtonState.targetState = !convertTextButtonState.currentState
-                    /**文字起こしエリア表示**/
-                    convertTextAreaState.targetState = !convertTextAreaState.currentState
-                }
-            )
-        }
-
         AnimatedVisibility(isAudioButtonVisible) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -264,14 +240,10 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                         clickAction = {
                             isRecording = !isRecording
                             if (isRecording) {
-                                /**Convert Textボタン非表示**/
-                                convertTextButtonState.targetState = false
                                 /**録音時間リセット**/
                                 recordedTime = 0L
                                 mainScreenViewModel.recordingStart(recorder,filePath)
                             } else {
-                                /**Convert Textボタン表示**/
-                                convertTextButtonState.targetState = true
                                 /**オーディオ操作ボタン表示**/
                                 isAudioPlayButtonVisible = true
                                 /**レコーディング停止**/
