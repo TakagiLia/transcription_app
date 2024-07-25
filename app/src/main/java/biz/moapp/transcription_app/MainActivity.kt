@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.main.MainScreen
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
-import biz.moapp.transcription_app.ui.summaryedit.SummaryEditScreen
 import biz.moapp.transcription_app.ui.theme.Transcription_appTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,11 +51,6 @@ class MainActivity : ComponentActivity() {
                             MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,)
                         }
                     }
-                    composable(route = Nav.SummaryEditScreen.name) {
-                       SummaryEditScreen(mainScreenViewModel,
-                           onNavigateToMain = { navController.navigate(Nav.MainScreen.name) })
-                    }
-
                 }
             }
         }
