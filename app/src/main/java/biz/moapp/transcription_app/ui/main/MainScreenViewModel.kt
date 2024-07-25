@@ -126,8 +126,9 @@ class MainScreenViewModel@Inject constructor(
         audioUseCase.recordingStop(recorder)
     }
 
-    fun audioPlay(filePath : String){
+    fun audioPlay(filePath : String) : MediaPlayer?{
         mediaPlayer = audioUseCase.audioPlay(filePath)
+        return mediaPlayer
     }
 
     fun audioStop(){
