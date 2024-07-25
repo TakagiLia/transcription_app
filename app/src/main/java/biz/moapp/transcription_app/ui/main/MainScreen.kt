@@ -294,6 +294,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                         enabled = isAudioPlayButtonVisible,
                         clickAction = {
                             isPlaying = !isPlaying
+                            /**Convert Textボタン非表示**/
+                            convertTextButtonState.targetState = false
                             if(isPlaying){
                                 val mediaPlayer = mainScreenViewModel.audioPlay(filePath)
                                 /**再生時間を取得**/
@@ -303,6 +305,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                                     }
                                 }
                             }else{
+                                /**Convert Textボタン表示**/
+                                convertTextButtonState.targetState = true
                                 mainScreenViewModel.audioStop()
                             }
                         }
