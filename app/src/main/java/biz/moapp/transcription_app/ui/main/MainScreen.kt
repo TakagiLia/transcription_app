@@ -164,6 +164,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                                         summaryAreaState.targetState = !summaryAreaState.currentState
                                         /**内容の初期化**/
                                         mainScreenViewModel.setSummaryText("")
+                                        /**カウント時間の初期化**/
+                                        recordedTime = 0L
                                     }
                                 )
                             }
