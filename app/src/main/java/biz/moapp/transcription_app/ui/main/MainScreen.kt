@@ -52,9 +52,8 @@ import kotlinx.coroutines.delay
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onNavigateToEdit: () -> Unit){
+fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
 
-    var speechStatus = remember { mutableStateOf("No Speech") }
     var isRecording by remember { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
@@ -254,62 +253,62 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,onN
         AnimatedVisibility(isAudioButtonVisible) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-             /**再生録音タイマー表示**/
-            Text(text = AppUtils.formatTime(recordedTime),
-                color = systemColor,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                /**レコーディング操作ボタン**/
-                OperationButton(
-                    modifier = Modifier.weight(0.5f),
-                    buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
-                    enabled = isAudioButtonVisible,
-                    clickAction = {
-                        isRecording = !isRecording
-                        if (isRecording) {
-                            /**Convert Textボタン非表示**/
-                            convertTextButtonState.targetState = false
-                            /**録音時間リセット**/
-                            recordedTime = 0L
-                            mainScreenViewModel.recordingStart(recorder,filePath)
-                        } else {
-                            /**Convert Textボタン表示**/
-                            convertTextButtonState.targetState = true
-                            /**オーディオ操作ボタン表示**/
-                            isAudioPlayButtonVisible = true
-                            /**レコーディング停止**/
-                            mainScreenViewModel.recordingStop(recorder)
-                        }
-                    })
-
-                /**オーディオ操作ボタン**/
-                OperationButton(
-                    modifier = Modifier.weight(0.5f),
-                    buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
-                    enabled = isAudioPlayButtonVisible,
-                    clickAction = {
-                        isPlaying = !isPlaying
-                        if(isPlaying){
-                            val mediaPlayer = mainScreenViewModel.audioPlay(filePath)
-                            /**再生時間を取得**/
-                            mediaPlayer?.duration?.let {
-                                if(recordedTime <= 0L){
-                                    recordedTime =  it.toLong()
-                                }
-                            }
-                        }else{
-                            mainScreenViewModel.audioStop()
-                        }
-                    }
+                 /**再生録音タイマー表示**/
+                Text(text = AppUtils.formatTime(recordedTime),
+                    color = systemColor,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold
                 )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    /**レコーディング操作ボタン**/
+                    OperationButton(
+                        modifier = Modifier.weight(0.5f),
+                        buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
+                        enabled = isAudioButtonVisible,
+                        clickAction = {
+                            isRecording = !isRecording
+                            if (isRecording) {
+                                /**Convert Textボタン非表示**/
+                                convertTextButtonState.targetState = false
+                                /**録音時間リセット**/
+                                recordedTime = 0L
+                                mainScreenViewModel.recordingStart(recorder,filePath)
+                            } else {
+                                /**Convert Textボタン表示**/
+                                convertTextButtonState.targetState = true
+                                /**オーディオ操作ボタン表示**/
+                                isAudioPlayButtonVisible = true
+                                /**レコーディング停止**/
+                                mainScreenViewModel.recordingStop(recorder)
+                            }
+                        })
+
+                    /**オーディオ操作ボタン**/
+                    OperationButton(
+                        modifier = Modifier.weight(0.5f),
+                        buttonName = if (!isPlaying) "Audio Play" else "Audio Stop",
+                        enabled = isAudioPlayButtonVisible,
+                        clickAction = {
+                            isPlaying = !isPlaying
+                            if(isPlaying){
+                                val mediaPlayer = mainScreenViewModel.audioPlay(filePath)
+                                /**再生時間を取得**/
+                                mediaPlayer?.duration?.let {
+                                    if(recordedTime <= 0L){
+                                        recordedTime =  it.toLong()
+                                    }
+                                }
+                            }else{
+                                mainScreenViewModel.audioStop()
+                            }
+                        }
+                    )
+                }
             }
-        }
         }
     }
 }

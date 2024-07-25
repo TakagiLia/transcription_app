@@ -49,8 +49,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
                     composable(route = Nav.MainScreen.name) {
                         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,
-                                onNavigateToEdit = { navController.navigate(Nav.SummaryEditScreen.name) })
+                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,)
                         }
                     }
                     composable(route = Nav.SummaryEditScreen.name) {
