@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -84,9 +85,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
 
     /**UI**/
     Column(modifier = modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Bottom,
+        .fillMaxHeight(0.8f)
+        .fillMaxWidth(1f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         /**音声をテキスト変換時の結果表示**/
@@ -95,15 +95,17 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
             is UIState.Loading -> {CircularProgressIndicator()}
             is UIState.Success -> {
                 AnimatedVisibility(visibleState = convertTextAreaState) {
-                Spacer(modifier = Modifier.height(5.dp))
-                    Column {
+                    Column(modifier = Modifier
+                        .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.Top,) {
                         OutlinedCard(
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface,
                             ),
                             border = BorderStroke(1.dp, systemColor),
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .fillMaxWidth()
+                                .padding(4.dp)
                         ) {
 
                             Text(
@@ -122,76 +124,94 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
                                 modifier = Modifier.padding(4.dp)
                             )
                         }
-                        /**要約ボタン**/
-                        OperationButton(
-                            modifier = maxModifierButton,
-                            buttonName = "Summary Text",
-                            clickAction = {
-                                /**要約表示画面に遷移**/
-                                onNavigateToSummary()
-                            }
-                        )
+                        Column (
+                            verticalArrangement = Arrangement.Bottom,){
+                            /**要約ボタン**/
+                            OperationButton(
+                                modifier = maxModifierButton,
+                                buttonName = "Summary Text",
+                                clickAction = {
+                                    /**要約表示画面に遷移**/
+                                    onNavigateToSummary()
+                                }
+                            )
+                        }
                     }
                 }
             }
             is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    }
 
-             /**再生録音タイマー表示**/
-            Text(text = AppUtils.formatTime(recordedTime),
-                color = systemColor,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold
-            )
+    Column(modifier = modifier
+        .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                /**レコーディング操作ボタン**/
-                OperationButton(
-                    modifier = Modifier.weight(0.5f),
-                    buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
-                    clickAction = {
-                        isRecording = !isRecording
-                        if (isRecording) {
-                            if(isRecordingPause){
-                                /**録音時間リセット**/
-                                recordedTime = 0L
-                                recorder = mainScreenViewModel.recordingStart(recorder, filePath)
-                            }else{
-                                /**レコーディング再開**/
-                                recorder.resume()
-                                /**レコード完了ボタンを非活性**/
-                                isRecordingComplete = !isRecordingComplete
-                            }
-                        }else {
-                            /**レコーディング一時停止**/
-                            recorder.pause()
-                            /**レコードをポーズにする**/
+        /**再生録音タイマー表示**/
+        Text(text = AppUtils.formatTime(recordedTime),
+            color = systemColor,
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            /**レコーディング操作ボタン**/
+            OperationButton(
+                modifier = Modifier.weight(0.5f),
+                buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
+                clickAction = {
+                    isRecording = !isRecording
+                    if (isRecording) {
+                        if(isRecordingPause){
+                            Log.d("--recording", "Initial Start")
+                            /**録音時間リセット**/
+                            recordedTime = 0L
+                            /**テキスト変換エリア非表示**/
+                            convertTextAreaState.targetState = false
+                            recorder = mainScreenViewModel.recordingStart(recorder, filePath)
+                        }else{
+                            Log.d("--recording", "Re Start")
+                            /**レコーディング再開**/
+                            recorder.resume()
+                            /**レコードをポーズではない状態にする**/
                             isRecordingPause = !isRecordingPause
-                            /**レコード完了ボタンを活性**/
+                            /**レコード完了ボタンを非活性**/
                             isRecordingComplete = !isRecordingComplete
                         }
+                    }else {
+                        Log.d("--recording", "Stop")
+                        /**レコーディング一時停止**/
+                        recorder.pause()
+                        /**レコードをポーズにする**/
+                        isRecordingPause = !isRecordingPause
+                        /**レコード完了ボタンを活性**/
+                        isRecordingComplete = !isRecordingComplete
                     }
-                )
-                /**録音完了**/
-                OperationButton(
-                    modifier = Modifier.weight(0.5f),
-                    buttonName = "Complete",
-                    enabled = isRecordingComplete,
-                    clickAction = {
-                        Log.d("--recording", "Complete")
-                        /**レコーディング停止**/
-                        mainScreenViewModel.recordingStop(recorder)
-                        /**録音した内容を文字起こし**/
-                        mainScreenViewModel.openAiAudioApi(filePath)
-                        /**文字起こしエリア表示**/
-                        convertTextAreaState.targetState = !convertTextAreaState.currentState
-                    }
-                )
-            }
+                }
+            )
+            /**録音完了**/
+            OperationButton(
+                modifier = Modifier.weight(0.5f),
+                buttonName = "Complete",
+                enabled = isRecordingComplete,
+                clickAction = {
+                    Log.d("--recording", "Complete")
+                    /**レコーディング停止**/
+                    mainScreenViewModel.recordingStop(recorder)
+                    /**録音した内容を文字起こし**/
+                    mainScreenViewModel.openAiAudioApi(filePath)
+                    /**文字起こしエリア表示**/
+                    convertTextAreaState.targetState = !convertTextAreaState.currentState
+                    /**ボタンのフラグを元に戻す**/
+                    isRecording = false
+                    isRecordingPause = true
+                    isRecordingComplete = false
+                }
+            )
         }
     }
 }
