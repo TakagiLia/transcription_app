@@ -3,7 +3,6 @@ package biz.moapp.transcription_app.ui.main
 import android.annotation.SuppressLint
 import android.media.MediaRecorder
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -42,9 +41,7 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import biz.moapp.transcription_app.AppUtils
-import biz.moapp.transcription_app.ui.compose.EditField
 import biz.moapp.transcription_app.ui.compose.OperationButton
-import biz.moapp.transcription_app.ui.state.MainUiState
 import biz.moapp.transcription_app.ui.state.UIState
 import kotlinx.coroutines.delay
 
@@ -52,18 +49,12 @@ import kotlinx.coroutines.delay
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
+fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, onNavigateToSummary: () -> Unit){
 
     var isRecording by remember { mutableStateOf(false) }
     var isAudioButtonVisible by remember { mutableStateOf(true) }
     var isAudioPlayButtonVisible by remember { mutableStateOf(false) }
-    var isEditable by remember { mutableStateOf(false) }
     val convertTextAreaState = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
-        }
-    }
-    val summaryAreaState = remember {
         MutableTransitionState(false).apply {
             targetState = true
         }
@@ -97,76 +88,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        /**要約時の結果表示**/
-        when (mainScreenViewModel.uiState.sendResultState) {
-            is MainUiState.SendResultState.NotYet -> Unit
-            is MainUiState.SendResultState.Loading -> {
-                CircularProgressIndicator()
-            }
-            is MainUiState.SendResultState.Success -> {
-                (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
-                    Log.d("--result response：　", value)
-                    AnimatedVisibility(visibleState = summaryAreaState) {
-                        Column {
-                            OutlinedCard(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                ),
-                                border = BorderStroke(1.dp, systemColor),
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                            ) {
-                                Text(
-                                    text = "要約した内容",
-                                    color = systemColor,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(4.dp)
-                                )
-                                EditField(mainScreenViewModel,isEditable)
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-
-                                /**編集ボタン**/
-                                OperationButton(
-                                    modifier = Modifier.weight(0.5f),
-                                    buttonName = if(!isEditable) "Edit Text" else "Change Text",
-                                    clickAction = {
-                                        isEditable = !isEditable
-                                    }
-                                )
-
-                                /**リセットボタン**/
-                                OperationButton(
-                                    modifier = Modifier.weight(0.5f),
-                                    buttonName = "Reset",
-                                    clickAction = {
-                                        isAudioButtonVisible = true
-                                        /**要約エリア非表示**/
-                                        summaryAreaState.targetState = !summaryAreaState.currentState
-                                        /**内容の初期化**/
-                                        mainScreenViewModel.setSummaryText("")
-                                        /**カウント時間の初期化**/
-                                        recordedTime = 0L
-                                    }
-                                )
-                            }
-                            /**要約した内容の保存**/
-                            OperationButton(
-                                modifier = maxModifierButton,
-                                buttonName = "save",
-                                clickAction = { mainScreenViewModel.summarySave(value) }
-                            )
-                        }
-                    }
-                }
-            }
-            is MainUiState.SendResultState.Error -> {}
-        }
-
         /**音声をテキスト変換時の結果表示**/
         when(mainUiState){
             is UIState.NotYet -> {}
@@ -205,11 +126,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                             modifier = maxModifierButton,
                             buttonName = "Summary Text",
                             clickAction = {
-                                mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
-                                /**文字起こしエリア非表示**/
-                                convertTextAreaState.targetState = !convertTextAreaState.currentState
-                                /**要約エリア表示**/
-                                summaryAreaState.targetState = !summaryAreaState.currentState
+                                /**要約表示画面に遷移**/
+                                onNavigateToSummary()
                             }
                         )
                     }
@@ -253,7 +171,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
                                 /**文字起こしエリア表示**/
                                 convertTextAreaState.targetState = !convertTextAreaState.currentState
                             }
-                        })
+                        }
+                    )
                 }
             }
         }
