@@ -6,9 +6,9 @@ import android.util.Log
 
 class AudioUseCaseImpl :AudioUseCase {
 
-    override fun recordingStart(recorder: MediaRecorder, filePath:String) {
+    override fun recordingStart(recorder: MediaRecorder, filePath:String) : MediaRecorder{
 
-        recorder.apply {
+        return recorder.apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
