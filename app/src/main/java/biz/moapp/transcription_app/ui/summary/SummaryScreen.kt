@@ -58,7 +58,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
     Column(modifier = modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Bottom,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         /**要約時の結果表示**/
