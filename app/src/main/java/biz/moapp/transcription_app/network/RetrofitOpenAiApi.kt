@@ -1,7 +1,8 @@
 package biz.moapp.transcription_app.network
 
-import  android.util.Log
-import biz.moapp.transcription_app.BuildConfig
+import android.util.Log
+import biz.moapp.transcription_app.OPENAI_API_KEY
+import biz.moapp.transcription_app.OPEN_AI_API_BASE_URL
 import biz.moapp.transcription_app.model.ChatCompletions
 import biz.moapp.transcription_app.model.child.ChatMessage
 import com.squareup.moshi.Moshi
@@ -21,9 +22,6 @@ interface RetrofitOpenAiApi {
     @POST("v1/chat/completions")
     suspend fun completion(@Body request : ChatCompletions.Request) : ChatCompletions.Response.Success
 }
-
-private const val OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY
-private const val OPEN_AI_API_BASE_URL = BuildConfig.OPENAI_BASE_URL
 
 @Singleton
 class RetrofitOpenAiNetwork @Inject constructor(moshi: Moshi):OpenAiDataSource{

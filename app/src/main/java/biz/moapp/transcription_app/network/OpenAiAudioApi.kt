@@ -1,6 +1,6 @@
 package biz.moapp.transcription_app.network
 
-import biz.moapp.transcription_app.BuildConfig
+import biz.moapp.transcription_app.OPENAI_API_KEY
 import com.squareup.moshi.Moshi
 import kotlinx.serialization.Serializable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -34,7 +34,6 @@ interface OpenAIService {
         @Part("model") model: RequestBody,
     ): Response<TranscriptionResponse>
 }
-private const val OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY
 
 @Serializable
 data class TranscriptionResponse(

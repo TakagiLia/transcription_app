@@ -56,6 +56,8 @@ class MainScreenViewModel@Inject constructor(
     var mediaPlayer: MediaPlayer? by mutableStateOf(null)
 
     fun summary(message: String){
+        /**ローディング**/
+        uiState = uiState.copy(sendResultState = MainUiState.SendResultState.Loading)
         viewModelScope.launch {
             try{
                 val result = withContext(ioDispatcher) {

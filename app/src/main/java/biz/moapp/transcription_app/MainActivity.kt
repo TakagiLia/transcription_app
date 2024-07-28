@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.main.MainScreen
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
+import biz.moapp.transcription_app.ui.summary.SummaryScreen
 import biz.moapp.transcription_app.ui.theme.Transcription_appTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +49,13 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
                     composable(route = Nav.MainScreen.name) {
                         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,)
+                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,
+                                onNavigateToSummary ={navController.navigate(Nav.SummaryScreen.name)})
+                        }
+                    }
+                    composable(route = Nav.SummaryScreen.name) {
+                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,)
                         }
                     }
                 }
