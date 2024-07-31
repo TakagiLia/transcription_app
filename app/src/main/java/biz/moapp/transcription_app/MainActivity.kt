@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(innerPadding), mainScreenViewModel, navController)
                         }
                         composable(route = Nav.SummaryScreen.name) {
-                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,navController)
+                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel)
                         }
                     }
                 }

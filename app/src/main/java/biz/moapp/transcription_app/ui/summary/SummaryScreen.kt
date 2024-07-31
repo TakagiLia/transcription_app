@@ -7,6 +7,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +37,7 @@ import biz.moapp.transcription_app.ui.state.MainUiState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,){
+fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel){
 
     var isEditable by remember { mutableStateOf(false) }
     var initialized by remember { mutableStateOf(false) }
@@ -70,6 +71,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
             is MainUiState.SendResultState.Success -> {
                 (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
                     Log.d("--result response：　", value)
+                    Spacer(modifier = Modifier.height(24.dp))
                     Column {
                         OutlinedCard(
                             colors = CardDefaults.cardColors(
