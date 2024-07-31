@@ -102,6 +102,9 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation (libs.google.firebase.core)
 
+    /**マテリアルデザインのアイコン追加パッケージ**/
+    implementation (libs.androidx.material.icons.extended)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
