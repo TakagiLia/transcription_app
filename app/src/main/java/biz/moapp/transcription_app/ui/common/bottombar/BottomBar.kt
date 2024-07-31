@@ -35,7 +35,7 @@ fun BottomBar(navController : NavHostController){
 
                     when(selectedItemIndex){
                         0 -> navController.navigate(Nav.MainScreen.name)
-                        1 -> Log.d("--BottomBar","center")
+                        1 -> navController.navigate(Nav.SummaryScreen.name)
                         2 -> Log.d("--BottomBar","right")
                     }
                 },
