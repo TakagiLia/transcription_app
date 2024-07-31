@@ -1,12 +1,9 @@
 package biz.moapp.transcription_app.ui.common.bottombar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.filled.Summarize
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**BottomBarのアイテムのデータクラス**/
@@ -27,16 +24,9 @@ val NAVIGATION_ITEMS = listOf(
         hasNews = false,
     ),
     BottomNavigationItem(
-        title = "Chat",
-        selectedIcon = Icons.Filled.Email,
-        unselectedIcon = Icons.Outlined.Email,
+        title = "Summary",
+        selectedIcon = Icons.Filled.Summarize,
+        unselectedIcon = Icons.Filled.Summarize,
         hasNews = false,
-        badgeCount = 45
-    ),
-    BottomNavigationItem(
-        title = "Settings",
-        selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings,
-        hasNews = true,
     ),
 )
