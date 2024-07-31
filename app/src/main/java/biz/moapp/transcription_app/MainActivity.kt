@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.common.TopBar
+import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
 import biz.moapp.transcription_app.ui.main.MainScreen
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 import biz.moapp.transcription_app.ui.summary.SummaryScreen
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
                 }
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
                     NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
                         composable(route = Nav.MainScreen.name) {
                             MainScreen(
