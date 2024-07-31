@@ -42,7 +42,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
+import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.state.UIState
 import kotlinx.coroutines.delay
@@ -51,7 +53,7 @@ import kotlinx.coroutines.delay
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, onNavigateToSummary: () -> Unit){
+fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, navController: NavHostController){
 
     var isRecording by remember { mutableStateOf(false) }
     var isRecordingPause by remember { mutableStateOf(true) }
@@ -98,6 +100,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
                     Column(modifier = Modifier
                         .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.Top,) {
+                        Spacer(modifier = Modifier.height(24.dp))
                         OutlinedCard(
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.surface,
@@ -132,7 +135,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
                                 buttonName = "Summary Text",
                                 clickAction = {
                                     /**要約表示画面に遷移**/
-                                    onNavigateToSummary()
+                                    navController.navigate(Nav.SummaryScreen.name)
                                 }
                             )
                         }
