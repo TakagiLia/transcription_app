@@ -12,7 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.theme.BottomBarIconColor
 import biz.moapp.transcription_app.ui.theme.Gray333333
@@ -33,6 +35,7 @@ fun BottomBar(navController : NavHostController){
                 onClick = {
                     selectedItemIndex = index
 
+                    /**アイコンの遷移先**/
                     when(selectedItemIndex){
                         0 -> navController.navigate(Nav.MainScreen.name)
                         1 -> navController.navigate(Nav.SummaryScreen.name)
@@ -40,7 +43,13 @@ fun BottomBar(navController : NavHostController){
                     }
                 },
                 label = {
-                    Text(text = item.title, color = Gray333333)
+                    /**アイコンのラベル取得**/
+                    val title = when(index){
+                        0 -> stringResource(R.string.navigationbar_home)
+                        1 -> stringResource(R.string.navigationbar_summary)
+                        else -> {""}
+                    }
+                    Text(text = title, color = Gray333333)
                 },
                 alwaysShowLabel = false,
                 icon = {
@@ -60,7 +69,7 @@ fun BottomBar(navController : NavHostController){
                             imageVector = if (index == selectedItemIndex) {
                                 item.selectedIcon
                             } else item.unselectedIcon,
-                            contentDescription = item.title
+                            contentDescription = ""
                         )
                     }
                 },

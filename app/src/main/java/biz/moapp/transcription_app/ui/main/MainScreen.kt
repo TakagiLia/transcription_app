@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
@@ -44,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
+import biz.moapp.transcription_app.R
+import biz.moapp.transcription_app.RECORDING_M4A
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.state.UIState
@@ -66,7 +69,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
     val context = LocalContext.current
     var recorder = remember { MediaRecorder(context) }
-    val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
+    val filePath : String = context.getExternalFilesDir(null)?.absolutePath + RECORDING_M4A
     val mainUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
@@ -112,7 +115,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                         ) {
 
                             Text(
-                                text = "録音した内容",
+                                text = stringResource(R.string.recording_content_title),
                                 color = systemColor,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(4.dp)
@@ -132,7 +135,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                             /**要約ボタン**/
                             OperationButton(
                                 modifier = maxModifierButton,
-                                buttonName = "Summary Text",
+                                buttonName = stringResource(R.string.recording_summarize),
                                 clickAction = {
                                     /**要約表示画面に遷移**/
                                     navController.navigate(Nav.SummaryScreen.name)
@@ -165,7 +168,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             /**レコーディング操作ボタン**/
             OperationButton(
                 modifier = Modifier.weight(0.5f),
-                buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
+                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(R.string.recording_stop),
                 clickAction = {
                     isRecording = !isRecording
                     if (isRecording) {
@@ -199,7 +202,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             /**録音完了**/
             OperationButton(
                 modifier = Modifier.weight(0.5f),
-                buttonName = "Complete",
+                buttonName = stringResource(R.string.recording_complete),
                 enabled = isRecordingComplete,
                 clickAction = {
                     Log.d("--recording", "Complete")

@@ -28,8 +28,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.ui.compose.EditField
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
@@ -82,7 +84,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel)
                                 .fillMaxSize(),
                         ) {
                             Text(
-                                text = "要約した内容",
+                                text = stringResource(R.string.summary_title),
                                 color = systemColor,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(4.dp)
@@ -97,7 +99,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel)
                             /**編集ボタン**/
                             OperationButton(
                                 modifier = maxModifierButton,
-                                buttonName = if(!isEditable) "Edit Text" else "Change Text",
+                                buttonName = if(!isEditable) stringResource(R.string.summary_edit) else stringResource(R.string.summary_change),
                                 clickAction = {
                                     isEditable = !isEditable
                                 }
@@ -106,7 +108,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel)
                         /**要約した内容の保存**/
                         OperationButton(
                             modifier = maxModifierButton,
-                            buttonName = "save",
+                            buttonName = stringResource(R.string.summary_save),
                             clickAction = { mainScreenViewModel.summarySave(value) }
                         )
                     }
