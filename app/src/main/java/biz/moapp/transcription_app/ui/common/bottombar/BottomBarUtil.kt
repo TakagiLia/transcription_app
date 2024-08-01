@@ -8,23 +8,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 /**BottomBarのアイテムのデータクラス**/
 data class BottomNavigationItem(
-    val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val hasNews: Boolean,
     val badgeCount: Int? = null
 )
-
 /**BottomBarのアイテムのリスト**/
 val NAVIGATION_ITEMS = listOf(
     BottomNavigationItem(
-        title = "Home",
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         hasNews = false,
     ),
     BottomNavigationItem(
-        title = "Summary",
         selectedIcon = Icons.Filled.Summarize,
         unselectedIcon = Icons.Filled.Summarize,
         hasNews = false,
