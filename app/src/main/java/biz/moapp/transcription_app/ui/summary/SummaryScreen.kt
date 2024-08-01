@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,16 +74,12 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel)
                     Log.d("--result response：　", value)
                     Spacer(modifier = Modifier.height(24.dp))
                     OutlinedCard(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ),
                         border = BorderStroke(1.dp, systemColor),
                         modifier = Modifier
                             .fillMaxSize(),
                     ) {
                         Text(
                             text = stringResource(R.string.summary_title),
-                            color = systemColor,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(4.dp)
                         )

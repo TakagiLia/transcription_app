@@ -20,9 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -104,9 +102,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                         verticalArrangement = Arrangement.Top,) {
                         Spacer(modifier = Modifier.height(24.dp))
                         OutlinedCard(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                            ),
                             border = BorderStroke(1.dp, systemColor),
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -115,7 +110,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
                             Text(
                                 text = stringResource(R.string.recording_content_title),
-                                color = systemColor,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(4.dp)
                             )
@@ -124,7 +118,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
                             Text(
                                 text = mainScreenViewModel.audioText.value,
-                                color = systemColor,
                                 style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                                 modifier = Modifier.padding(4.dp)
                             )
@@ -146,7 +139,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
         /**再生録音タイマー表示**/
         Text(text = AppUtils.formatTime(recordedTime),
-            color = systemColor,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold
         )

@@ -16,9 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
-import biz.moapp.transcription_app.ui.theme.BottomBarIconColor
-import biz.moapp.transcription_app.ui.theme.Gray333333
-import biz.moapp.transcription_app.ui.theme.Viridian
 
 @Composable
 fun BottomBar(navController : NavHostController){
@@ -27,10 +24,9 @@ fun BottomBar(navController : NavHostController){
         mutableStateOf(0)
     }
 
-    NavigationBar(containerColor = Viridian, contentColor = Gray333333) {
+    NavigationBar() {
         NAVIGATION_ITEMS.forEachIndexed { index, item ->
             NavigationBarItem(
-                colors = BottomBarIconColor,
                 selected = selectedItemIndex == index,
                 onClick = {
                     selectedItemIndex = index
@@ -49,7 +45,7 @@ fun BottomBar(navController : NavHostController){
                         1 -> stringResource(R.string.navigationbar_summary)
                         else -> {""}
                     }
-                    Text(text = title, color = Gray333333)
+                    Text(text = title)
                 },
                 alwaysShowLabel = false,
                 icon = {
