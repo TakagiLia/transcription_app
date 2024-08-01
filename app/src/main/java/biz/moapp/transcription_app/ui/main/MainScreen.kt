@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.R
-import biz.moapp.transcription_app.RECORDING_M4A
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.state.UIState
@@ -69,7 +68,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
     val context = LocalContext.current
     var recorder = remember { MediaRecorder(context) }
-    val filePath : String = context.getExternalFilesDir(null)?.absolutePath + RECORDING_M4A
+    val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/audio.m4a"
     val mainUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
@@ -90,7 +89,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
     /**UI**/
     Column(modifier = modifier
-        .fillMaxHeight(0.8f)
+        .fillMaxHeight(0.7f)
         .fillMaxWidth(1f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -132,15 +131,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                         }
                         Column (
                             verticalArrangement = Arrangement.Bottom,){
-                            /**要約ボタン**/
-                            OperationButton(
-                                modifier = maxModifierButton,
-                                buttonName = stringResource(R.string.recording_summarize),
-                                clickAction = {
-                                    /**要約表示画面に遷移**/
-                                    navController.navigate(Nav.SummaryScreen.name)
-                                }
-                            )
                         }
                     }
                 }
@@ -219,5 +209,15 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                 }
             )
         }
+        /**要約ボタン**/
+        OperationButton(
+            modifier = maxModifierButton,
+            buttonName = stringResource(R.string.recording_summarize),
+            enabled = convertTextAreaState.currentState,
+            clickAction = {
+                /**要約表示画面に遷移**/
+                navController.navigate(Nav.SummaryScreen.name)
+            }
+        )
     }
 }

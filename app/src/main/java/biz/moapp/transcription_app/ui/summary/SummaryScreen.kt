@@ -6,8 +6,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,7 +59,8 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel)
 
     /**UI**/
     Column(modifier = modifier
-        .fillMaxSize()
+        .fillMaxHeight(0.75f)
+        .fillMaxWidth(1f)
         .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -74,48 +75,46 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel)
                 (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
                     Log.d("--result response：　", value)
                     Spacer(modifier = Modifier.height(24.dp))
-                    Column {
-                        OutlinedCard(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                            ),
-                            border = BorderStroke(1.dp, systemColor),
-                            modifier = Modifier
-                                .fillMaxSize(),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.summary_title),
-                                color = systemColor,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(4.dp)
-                            )
-                            EditField(mainScreenViewModel,isEditable)
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-
-                            /**編集ボタン**/
-                            OperationButton(
-                                modifier = maxModifierButton,
-                                buttonName = if(!isEditable) stringResource(R.string.summary_edit) else stringResource(R.string.summary_change),
-                                clickAction = {
-                                    isEditable = !isEditable
-                                }
-                            )
-                        }
-                        /**要約した内容の保存**/
-                        OperationButton(
-                            modifier = maxModifierButton,
-                            buttonName = stringResource(R.string.summary_save),
-                            clickAction = { mainScreenViewModel.summarySave(value) }
+                    OutlinedCard(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ),
+                        border = BorderStroke(1.dp, systemColor),
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.summary_title),
+                            color = systemColor,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(4.dp)
                         )
+                        EditField(mainScreenViewModel,isEditable)
                     }
                 }
             }
             is MainUiState.SendResultState.Error -> {}
         }
-
+    }
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+            /**編集ボタン**/
+            OperationButton(
+                modifier = maxModifierButton,
+                buttonName = if(!isEditable) stringResource(R.string.summary_edit) else stringResource(R.string.summary_change),
+                clickAction = {
+                    isEditable = !isEditable
+                }
+            )
+        /**要約した内容の保存**/
+        OperationButton(
+            modifier = maxModifierButton,
+            buttonName = stringResource(R.string.summary_save),
+            clickAction = { mainScreenViewModel.summarySave(mainScreenViewModel.summaryText.value) }
+        )
     }
 }

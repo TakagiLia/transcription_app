@@ -18,6 +18,6 @@ fun OperationButton(modifier: Modifier, enabled: Boolean = true, buttonName : St
         enabled = enabled,
         border = BorderStroke(1.dp, Color.Black),
         onClick = {clickAction()}){
-        Text(modifier = Modifier.padding(8.dp), text = buttonName)
+        Text(modifier = Modifier.padding(6.dp), text = buttonName)
     }
 }
