@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">transcription_app</string>
+
+    <!--録音画面-->
+
+    <!--テキスト固定文-->
+    <string name="recording_content_title">録音した内容</string>
+    <!--ボタンラベル-->
+    <string name="recording_start">録音開始</string>
+    <string name="recording_stop">録音停止</string>
+    <string name="recording_complete">録音完了</string>
+    <string name="recording_summarize">会議記録作成</string>
+
+    <!--トップバーの文字-->
+    <string name="topbar_title">RecMemo</string>
+
+    <!--ナビゲーションバーでの利用-->
+    <string name="navigationbar_home">ホーム</string>
+    <string name="navigationbar_summary">会議記録</string>
+
+    <!--サマリー画面で利用-->
+
+    <!--テキスト固定文-->
+    <string name="summary_title">要約した内容</string>
+    <!--ボタンラベル-->
+    <string name="summary_edit">編集</string>
+    <string name="summary_change">内容を変更</string>
+    <string name="summary_save">保存</string>
+
 </resources>
