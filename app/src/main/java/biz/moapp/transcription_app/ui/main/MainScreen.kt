@@ -10,6 +10,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -69,6 +71,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
     val mainUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+    var recordingHelpText by remember { mutableStateOf("") }
+    var completeHelpText by remember { mutableStateOf("") }
 
     /**カウントした秒数をもつ**/
     var recordedTime by remember { mutableLongStateOf(0L) }
@@ -85,52 +89,85 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
         .fillMaxWidth()
         .height(80.dp)
 
-    /**UI**/
-    Column(modifier = modifier
-        .fillMaxHeight(0.7f)
-        .fillMaxWidth(1f),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        /**音声をテキスト変換時の結果表示**/
-        when(mainUiState){
-            is UIState.NotYet -> {}
-            is UIState.Loading -> {CircularProgressIndicator()}
-            is UIState.Success -> {
-                AnimatedVisibility(visibleState = convertTextAreaState) {
-                    Column(modifier = Modifier
-                        .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.Top,) {
 
-                        Spacer(modifier = Modifier.height(24.dp))
+    /**画面サイズの取得**/
+    BoxWithConstraints {
+        val width = maxWidth
+        val height = maxHeight
 
-                        OutlinedCard(
-                            border = BorderStroke(1.dp, systemColor),
+        /**UI**/
+        Column(
+            modifier = modifier
+                .fillMaxHeight(0.7f)
+                .fillMaxWidth(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            /**音声をテキスト変換時の結果表示**/
+            when (mainUiState) {
+                is UIState.NotYet -> {
+                    if (isRecording) {
+                        recordingHelpText = stringResource(R.string.recording_help_stop)
+                        completeHelpText = stringResource(R.string.recording_help_complete)
+                    } else {
+                        recordingHelpText = stringResource(R.string.recording_help_start)
+                        completeHelpText = ""
+                    }
+                    Column(modifier = modifier.padding(top = (width * 0.4f),),
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = recordingHelpText, textAlign = TextAlign.Center)
+                            Text(text = completeHelpText,textAlign = TextAlign.Center)
+                    }
+                }
+
+                is UIState.Loading -> {
+                    Column(modifier = modifier.padding(top = (width * 0.4f),)) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is UIState.Success -> {
+                    AnimatedVisibility(visibleState = convertTextAreaState) {
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.Top,
                         ) {
 
-                            Text(
-                                text = stringResource(R.string.recording_content_title),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(4.dp)
-                            )
+                            Spacer(modifier = Modifier.height(24.dp))
 
-                            Spacer(modifier = Modifier.height(1.dp))
+                            OutlinedCard(
+                                border = BorderStroke(1.dp, systemColor),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
 
-                            Text(
-                                text = mainScreenViewModel.audioText.value,
-                                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                modifier = Modifier.padding(4.dp)
-                            )
-                        }
-                        Column (
-                            verticalArrangement = Arrangement.Bottom,){
+                                Text(
+                                    text = stringResource(R.string.recording_content_title),
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(4.dp)
+                                )
+
+                                Spacer(modifier = Modifier.height(1.dp))
+
+                                Text(
+                                    text = mainScreenViewModel.audioText.value,
+                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                    modifier = Modifier.padding(4.dp)
+                                )
+                            }
+                            Column(
+                                verticalArrangement = Arrangement.Bottom,
+                            ) {
+                            }
                         }
                     }
                 }
+
+                is UIState.Error -> {
+                    Text(text = "Error: ${(mainUiState as UIState.Error).message}")
+                }
             }
-            is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
     }
 
@@ -195,7 +232,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     /**録音した内容を文字起こし**/
                     mainScreenViewModel.openAiAudioApi(filePath)
                     /**文字起こしエリア表示**/
-                    convertTextAreaState.targetState = !convertTextAreaState.currentState
+                    convertTextAreaState.targetState = true
                     /**ボタンのフラグを元に戻す**/
                     isRecording = false
                     isRecordingPause = true
