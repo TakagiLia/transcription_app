@@ -22,6 +22,8 @@
 
     <!--テキスト固定文-->
     <string name="summary_title">要約した内容</string>
+    <string name="summary_no_content">要約する音声がありません</string>
+
     <!--ボタンラベル-->
     <string name="summary_edit">編集</string>
     <string name="summary_change">内容を変更</string>
