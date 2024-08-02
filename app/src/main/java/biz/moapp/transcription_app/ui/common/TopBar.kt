@@ -8,15 +8,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(navigateBack : NavHostController){
+
+    val backStackEntry by navigateBack.currentBackStackEntryAsState()
+    val selectedRoute = backStackEntry?.destination?.route?.substringBefore("/")
 
     CenterAlignedTopAppBar(
         title = {
@@ -26,11 +31,13 @@ fun TopBar(navigateBack : NavHostController){
             )
         },
         navigationIcon = {
-            IconButton(onClick = {navigateBack.navigate(Nav.MainScreen.name)}) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Localized description"
-                )
+            if(selectedRoute != Nav.MainScreen.name){
+                IconButton(onClick = {navigateBack.navigate(Nav.MainScreen.name)}) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Localized description"
+                    )
+                }
             }
         },
 //        actions = {
