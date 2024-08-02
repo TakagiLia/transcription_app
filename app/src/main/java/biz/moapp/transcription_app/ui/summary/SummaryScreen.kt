@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +36,7 @@ import biz.moapp.transcription_app.ui.state.MainUiState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, action: String){
+fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, action: String) {
 
 
     var isEditable by remember { mutableStateOf(false) }
@@ -50,24 +51,36 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
     }
 
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    val maxModifierButton : Modifier = Modifier
+    val maxModifierButton: Modifier = Modifier
         .fillMaxWidth()
         .height(80.dp)
 
+    /**画面サイズの取得**/
+    BoxWithConstraints {
+        val width = maxWidth
+        val height = maxHeight
+
     /**UI**/
-    Column(modifier = modifier
+    Column(
+        modifier = modifier
 //        .fillMaxHeight(0.75f)
-        .fillMaxWidth(1f)
-        .verticalScroll(rememberScrollState()),
+            .fillMaxWidth(1f)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         /**要約時の結果表示**/
         when (mainScreenViewModel.uiState.sendResultState) {
-            is MainUiState.SendResultState.NotYet -> Text(stringResource(R.string.summary_no_content))
+            is MainUiState.SendResultState.NotYet -> Column(modifier = modifier.padding(top = (width * 0.5f),)) {
+                Text(
+                    stringResource(R.string.summary_no_content)
+                )
+            }
+
             is MainUiState.SendResultState.Loading -> {
                 CircularProgressIndicator()
             }
+
             is MainUiState.SendResultState.Success -> {
                 (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
                     Log.d("--result response：　", value)
@@ -83,13 +96,15 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(4.dp)
                         )
-                        EditField(mainScreenViewModel,isEditable)
+                        EditField(mainScreenViewModel, isEditable)
                     }
                 }
             }
+
             is MainUiState.SendResultState.Error -> {}
         }
     }
+}
 //    Column(
 //        modifier = modifier
 //            .fillMaxSize(),
