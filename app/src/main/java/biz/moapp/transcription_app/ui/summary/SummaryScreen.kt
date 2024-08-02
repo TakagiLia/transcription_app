@@ -77,7 +77,8 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
                     OutlinedCard(
                         border = BorderStroke(1.dp, systemColor),
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxSize()
+                            .padding(16.dp),
                     ) {
                         Text(
                             text = stringResource(R.string.summary_title),

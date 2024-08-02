@@ -107,7 +107,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                             border = BorderStroke(1.dp, systemColor),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(4.dp)
+                                .padding(16.dp)
                         ) {
 
                             Text(
