@@ -7,7 +7,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.ui.compose.EditField
-import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 import biz.moapp.transcription_app.ui.state.MainUiState
 
@@ -58,7 +56,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
 
     /**UI**/
     Column(modifier = modifier
-        .fillMaxHeight(0.75f)
+//        .fillMaxHeight(0.75f)
         .fillMaxWidth(1f)
         .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
@@ -92,12 +90,12 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
             is MainUiState.SendResultState.Error -> {}
         }
     }
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+//    Column(
+//        modifier = modifier
+//            .fillMaxSize(),
+//        verticalArrangement = Arrangement.Bottom,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
 //            /**編集ボタン**/
 //            OperationButton(
 //                modifier = maxModifierButton,
@@ -106,11 +104,11 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
 //                    isEditable = !isEditable
 //                }
 //            )
-        /**要約した内容の保存**/
-        OperationButton(
-            modifier = maxModifierButton,
-            buttonName = stringResource(R.string.summary_save),
-            clickAction = { mainScreenViewModel.summarySave(mainScreenViewModel.summaryText.value) }
-        )
-    }
+//        /**要約した内容の保存**/
+//        OperationButton(
+//            modifier = maxModifierButton,
+//            buttonName = stringResource(R.string.summary_save),
+//            clickAction = { mainScreenViewModel.summarySave(mainScreenViewModel.summaryText.value) }
+//        )
+//    }
 }
