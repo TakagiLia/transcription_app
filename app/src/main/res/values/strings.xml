@@ -9,14 +9,14 @@
     <string name="recording_start">録音開始</string>
     <string name="recording_stop">録音停止</string>
     <string name="recording_complete">録音完了</string>
-    <string name="recording_summarize">会議記録作成</string>
+    <string name="recording_summarize">AI議事録作成</string>
 
     <!--トップバーの文字-->
     <string name="topbar_title">RecMemo</string>
 
     <!--ナビゲーションバーでの利用-->
     <string name="navigationbar_home">ホーム</string>
-    <string name="navigationbar_summary">会議記録</string>
+    <string name="navigationbar_summary">AI議事録</string>
 
     <!--サマリー画面で利用-->
 
