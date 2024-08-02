@@ -21,6 +21,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -190,6 +193,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             OperationButton(
                 modifier = Modifier.weight(0.5f),
                 buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(R.string.recording_stop),
+                icon = if (!isRecording) Icons.Filled.Mic else Icons.Filled.Stop,
                 clickAction = {
                     isRecording = !isRecording
                     if (isRecording) {
