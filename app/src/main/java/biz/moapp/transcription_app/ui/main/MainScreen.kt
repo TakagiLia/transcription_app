@@ -20,9 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,12 +35,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
+import biz.moapp.transcription_app.R
+import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.state.UIState
 import kotlinx.coroutines.delay
@@ -51,7 +53,7 @@ import kotlinx.coroutines.delay
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, onNavigateToSummary: () -> Unit){
+fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, navController: NavHostController){
 
     var isRecording by remember { mutableStateOf(false) }
     var isRecordingPause by remember { mutableStateOf(true) }
@@ -85,7 +87,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
 
     /**UI**/
     Column(modifier = modifier
-        .fillMaxHeight(0.8f)
+        .fillMaxHeight(0.7f)
         .fillMaxWidth(1f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -98,10 +100,10 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
                     Column(modifier = Modifier
                         .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.Top,) {
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         OutlinedCard(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                            ),
                             border = BorderStroke(1.dp, systemColor),
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -109,8 +111,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
                         ) {
 
                             Text(
-                                text = "録音した内容",
-                                color = systemColor,
+                                text = stringResource(R.string.recording_content_title),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(4.dp)
                             )
@@ -119,22 +120,12 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
 
                             Text(
                                 text = mainScreenViewModel.audioText.value,
-                                color = systemColor,
                                 style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
                                 modifier = Modifier.padding(4.dp)
                             )
                         }
                         Column (
                             verticalArrangement = Arrangement.Bottom,){
-                            /**要約ボタン**/
-                            OperationButton(
-                                modifier = maxModifierButton,
-                                buttonName = "Summary Text",
-                                clickAction = {
-                                    /**要約表示画面に遷移**/
-                                    onNavigateToSummary()
-                                }
-                            )
                         }
                     }
                 }
@@ -150,7 +141,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
 
         /**再生録音タイマー表示**/
         Text(text = AppUtils.formatTime(recordedTime),
-            color = systemColor,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold
         )
@@ -162,7 +152,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
             /**レコーディング操作ボタン**/
             OperationButton(
                 modifier = Modifier.weight(0.5f),
-                buttonName = if (!isRecording) "Recording Start" else " Recording Stop",
+                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(R.string.recording_stop),
                 clickAction = {
                     isRecording = !isRecording
                     if (isRecording) {
@@ -196,7 +186,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
             /**録音完了**/
             OperationButton(
                 modifier = Modifier.weight(0.5f),
-                buttonName = "Complete",
+                buttonName = stringResource(R.string.recording_complete),
                 enabled = isRecordingComplete,
                 clickAction = {
                     Log.d("--recording", "Complete")
@@ -213,5 +203,17 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, on
                 }
             )
         }
+        /**要約ボタン**/
+        OperationButton(
+            modifier = maxModifierButton,
+            buttonName = stringResource(R.string.recording_summarize),
+            enabled = convertTextAreaState.currentState,
+            clickAction = {
+                /**要約表示画面に遷移**/
+//                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
+                navController.navigate("${Nav.SummaryScreen.name}/summarize")
+            }
+        )
+
     }
 }

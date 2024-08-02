@@ -16,10 +16,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import biz.moapp.transcription_app.navigation.Nav
+import biz.moapp.transcription_app.ui.common.TopBar
+import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
 import biz.moapp.transcription_app.ui.main.MainScreen
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 import biz.moapp.transcription_app.ui.summary.SummaryScreen
@@ -46,16 +50,17 @@ class MainActivity : ComponentActivity() {
                 }
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
-                    composable(route = Nav.MainScreen.name) {
-                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            MainScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,
-                                onNavigateToSummary ={navController.navigate(Nav.SummaryScreen.name)})
+                Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
+                    NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
+                        composable(route = Nav.MainScreen.name) {
+                            MainScreen(
+                                modifier = Modifier.padding(innerPadding), mainScreenViewModel, navController)
                         }
-                    }
-                    composable(route = Nav.SummaryScreen.name) {
-                        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel,)
+                        composable(route = "${Nav.SummaryScreen.name}/{action}",
+                            arguments = listOf(navArgument("action"){ type = NavType.StringType})
+                        ) {backStackEntry ->
+                            val action = backStackEntry.arguments?.getString("action")
+                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel, action ?: "")
                         }
                     }
                 }
