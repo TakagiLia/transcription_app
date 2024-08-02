@@ -2,7 +2,6 @@ package biz.moapp.transcription_app.ui.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,12 +33,12 @@ fun TopBar(navigateBack : NavHostController){
                 )
             }
         },
-        actions = {
-            Icon(
-                imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "Localized description"
-            )
-        },
+//        actions = {
+//            Icon(
+//                imageVector = Icons.Filled.AccountCircle,
+//                contentDescription = "Localized description"
+//            )
+//        },
     )
 
 }
