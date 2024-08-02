@@ -66,7 +66,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
     val context = LocalContext.current
     var recorder = remember { MediaRecorder(context) }
-    val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/audio.m4a"
+    val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
     val mainUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
@@ -100,7 +100,9 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     Column(modifier = Modifier
                         .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.Top,) {
+
                         Spacer(modifier = Modifier.height(24.dp))
+
                         OutlinedCard(
                             border = BorderStroke(1.dp, systemColor),
                             modifier = Modifier
@@ -212,5 +214,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                 navController.navigate("${Nav.SummaryScreen.name}/summarize")
             }
         )
+
     }
 }

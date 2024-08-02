@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
                     ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
                 }
                 val navController = rememberNavController()
+
                 Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
                     NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
                         composable(route = Nav.MainScreen.name) {

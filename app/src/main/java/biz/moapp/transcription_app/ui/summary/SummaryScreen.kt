@@ -39,6 +39,7 @@ import biz.moapp.transcription_app.ui.state.MainUiState
 @Composable
 fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, action: String){
 
+
     var isEditable by remember { mutableStateOf(false) }
     var initialized by remember { mutableStateOf(false) }
 
