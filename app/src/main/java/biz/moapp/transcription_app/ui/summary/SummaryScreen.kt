@@ -96,14 +96,14 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-            /**編集ボタン**/
-            OperationButton(
-                modifier = maxModifierButton,
-                buttonName = if(!isEditable) stringResource(R.string.summary_edit) else stringResource(R.string.summary_change),
-                clickAction = {
-                    isEditable = !isEditable
-                }
-            )
+//            /**編集ボタン**/
+//            OperationButton(
+//                modifier = maxModifierButton,
+//                buttonName = if(!isEditable) stringResource(R.string.summary_edit) else stringResource(R.string.summary_change),
+//                clickAction = {
+//                    isEditable = !isEditable
+//                }
+//            )
         /**要約した内容の保存**/
         OperationButton(
             modifier = maxModifierButton,
