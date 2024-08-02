@@ -65,7 +65,7 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
     ) {
         /**要約時の結果表示**/
         when (mainScreenViewModel.uiState.sendResultState) {
-            is MainUiState.SendResultState.NotYet -> Unit
+            is MainUiState.SendResultState.NotYet -> Text(stringResource(R.string.summary_no_content))
             is MainUiState.SendResultState.Loading -> {
                 CircularProgressIndicator()
             }
