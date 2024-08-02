@@ -16,9 +16,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.common.TopBar
 import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
@@ -53,8 +55,11 @@ class MainActivity : ComponentActivity() {
                             MainScreen(
                                 modifier = Modifier.padding(innerPadding), mainScreenViewModel, navController)
                         }
-                        composable(route = Nav.SummaryScreen.name) {
-                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel)
+                        composable(route = "${Nav.SummaryScreen.name}/{action}",
+                            arguments = listOf(navArgument("action"){ type = NavType.StringType})
+                        ) {backStackEntry ->
+                            val action = backStackEntry.arguments?.getString("action")
+                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel, action ?: "")
                         }
                     }
                 }

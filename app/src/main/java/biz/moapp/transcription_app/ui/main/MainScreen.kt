@@ -208,7 +208,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             enabled = convertTextAreaState.currentState,
             clickAction = {
                 /**要約表示画面に遷移**/
-                navController.navigate(Nav.SummaryScreen.name)
+//                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
+                navController.navigate("${Nav.SummaryScreen.name}/summarize")
             }
         )
     }

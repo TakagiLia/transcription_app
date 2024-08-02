@@ -34,7 +34,7 @@ fun BottomBar(navController : NavHostController){
                     /**アイコンの遷移先**/
                     when(selectedItemIndex){
                         0 -> navController.navigate(Nav.MainScreen.name)
-                        1 -> navController.navigate(Nav.SummaryScreen.name)
+                        1 -> navController.navigate("${Nav.SummaryScreen.name}/bottomBar")
                         2 -> Log.d("--BottomBar","right")
                     }
                 },

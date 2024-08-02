@@ -37,14 +37,14 @@ import biz.moapp.transcription_app.ui.state.MainUiState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel){
+fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, action: String){
 
     var isEditable by remember { mutableStateOf(false) }
     var initialized by remember { mutableStateOf(false) }
 
     /**初期表示のための処理**/
     LaunchedEffect(Unit) {
-        if (!initialized) {
+        if (!initialized && action == "summarize") {
             mainScreenViewModel.summary(mainScreenViewModel.audioText.value)
             initialized = true
         }
