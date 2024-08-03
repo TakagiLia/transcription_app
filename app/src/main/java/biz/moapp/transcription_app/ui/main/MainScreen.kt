@@ -19,10 +19,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
@@ -51,6 +53,7 @@ import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
 import biz.moapp.transcription_app.ui.compose.OperationButton
+import biz.moapp.transcription_app.ui.compose.RecordingButton
 import biz.moapp.transcription_app.ui.state.UIState
 import kotlinx.coroutines.delay
 
@@ -180,7 +183,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         /**再生録音タイマー表示**/
-        Text(text = AppUtils.formatTime(recordedTime),
+        Text(
+            text = AppUtils.formatTime(recordedTime),
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold
         )
@@ -189,22 +193,24 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            /**レコーディング操作ボタン**/
-            OperationButton(
-                modifier = Modifier.weight(0.5f),
-                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(R.string.recording_stop),
-                icon = if (!isRecording) Icons.Filled.Mic else Icons.Filled.Stop,
-                clickAction = {
-                    isRecording = !isRecording
+            /**レコーディング操作ボタン（New）**/
+            RecordingButton(
+                isEnable = isRecording,
+                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(
+                    R.string.recording_stop
+                ),
+                icon = if (isRecording) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                onToggle = { newIsRecording ->
+                    isRecording = newIsRecording
                     if (isRecording) {
-                        if(isRecordingPause){
+                        if (isRecordingPause) {
                             Log.d("--recording", "Initial Start")
                             /**録音時間リセット**/
                             recordedTime = 0L
                             /**テキスト変換エリア非表示**/
                             convertTextAreaState.targetState = false
                             recorder = mainScreenViewModel.recordingStart(recorder, filePath)
-                        }else{
+                        } else {
                             Log.d("--recording", "Re Start")
                             /**レコーディング再開**/
                             recorder.resume()
@@ -213,7 +219,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                             /**レコード完了ボタンを非活性**/
                             isRecordingComplete = !isRecordingComplete
                         }
-                    }else {
+                    } else {
                         Log.d("--recording", "Stop")
                         /**レコーディング一時停止**/
                         recorder.pause()
@@ -222,15 +228,16 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                         /**レコード完了ボタンを活性**/
                         isRecordingComplete = !isRecordingComplete
                     }
-                }
+                },
             )
-            /**録音完了**/
-            OperationButton(
-                modifier = Modifier.weight(0.5f),
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            /**録音完了(New)**/
+            RecordingButton(isEnable = isRecordingComplete,
                 buttonName = stringResource(R.string.recording_complete),
-                enabled = isRecordingComplete,
-                clickAction = {
-                    Log.d("--recording", "Complete")
+                icon = Icons.Filled.Stop,
+                onToggle = {
                     /**レコーディング停止**/
                     mainScreenViewModel.recordingStop(recorder)
                     /**録音した内容を文字起こし**/
@@ -243,18 +250,18 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     isRecordingComplete = false
                 }
             )
-        }
-        /**要約ボタン**/
-        OperationButton(
-            modifier = maxModifierButton,
-            buttonName = stringResource(R.string.recording_summarize),
-            enabled = convertTextAreaState.currentState,
-            clickAction = {
-                /**要約表示画面に遷移**/
+            /**要約ボタン**/
+            OperationButton(
+                modifier = maxModifierButton,
+                buttonName = stringResource(R.string.recording_summarize),
+                enabled = convertTextAreaState.currentState,
+                clickAction = {
+                    /**要約表示画面に遷移**/
 //                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
-                navController.navigate("${Nav.SummaryScreen.name}/summarize")
-            }
-        )
+                    navController.navigate("${Nav.SummaryScreen.name}/summarize")
+                }
+            )
 
+        }
     }
 }
