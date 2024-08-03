@@ -113,11 +113,10 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                 is UIState.NotYet -> {
                     if (isRecording) {
                         recordingHelpText = stringResource(R.string.recording_help_stop)
-                        completeHelpText = stringResource(R.string.recording_help_complete)
                     } else {
                         recordingHelpText = stringResource(R.string.recording_help_start)
-                        completeHelpText = ""
                     }
+                    completeHelpText = if(isRecordingComplete) stringResource(R.string.recording_help_complete) else ""
                     Column(modifier = modifier.padding(top = (width * 0.4f),),
                         horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(text = recordingHelpText, textAlign = TextAlign.Center)
@@ -250,6 +249,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     isRecordingComplete = false
                 }
             )
+        }
             /**要約ボタン**/
             OperationButton(
                 modifier = maxModifierButton,
@@ -261,7 +261,5 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     navController.navigate("${Nav.SummaryScreen.name}/summarize")
                 }
             )
-
-        }
     }
 }
