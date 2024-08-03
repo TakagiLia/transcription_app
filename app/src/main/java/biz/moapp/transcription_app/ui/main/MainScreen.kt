@@ -24,8 +24,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PauseCircleFilled
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -45,13 +48,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineBreak
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
+import biz.moapp.transcription_app.ui.compose.HelpTextInIcon
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.compose.RecordingButton
 import biz.moapp.transcription_app.ui.state.UIState
@@ -77,8 +80,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
     val mainUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    var recordingHelpText by remember { mutableStateOf("") }
-    var completeHelpText by remember { mutableStateOf("") }
 
     /**カウントした秒数をもつ**/
     var recordedTime by remember { mutableLongStateOf(0L) }
@@ -111,16 +112,34 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             /**音声をテキスト変換時の結果表示**/
             when (mainUiState) {
                 is UIState.NotYet -> {
-                    if (isRecording) {
-                        recordingHelpText = stringResource(R.string.recording_help_stop)
-                    } else {
-                        recordingHelpText = stringResource(R.string.recording_help_start)
+
+                    /**ヘルプテキストの表示値を設定**/
+                    val recordingHelpText = when (isRecording) {
+                        true -> stringResource(R.string.recording_help_stop)
+                        false -> stringResource(R.string.recording_help_start)
                     }
-                    completeHelpText = if(isRecordingComplete) stringResource(R.string.recording_help_complete) else ""
+                    val recordingHelpTextIcon = when (isRecording) {
+                        true -> Icons.Filled.PauseCircleFilled
+                        false -> Icons.Filled.PlayCircleFilled
+                    }
+                    val completeHelpText = when (isRecordingComplete) {
+                        true -> stringResource(R.string.recording_help_complete)
+                        false -> ""
+                    }
+                    val completeHelpTextIcon = when (isRecordingComplete) {
+                        true -> Icons.Filled.StopCircle
+                        false -> null
+                    }
+
+                    /**ヘルプテキスト表示**/
                     Column(modifier = modifier.padding(top = (width * 0.4f),),
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = recordingHelpText, textAlign = TextAlign.Center)
-                            Text(text = completeHelpText,textAlign = TextAlign.Center)
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                        /**レコーディング操作ボタンのヘルプテキスト**/
+                        HelpTextInIcon(recordingHelpTextIcon, recordingHelpText)
+                        completeHelpTextIcon?.let {
+                            /**レコーディンング完了ボタンのヘルプテキスト**/
+                            HelpTextInIcon(it, completeHelpText)
+                        }
                     }
                 }
 
