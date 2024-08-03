@@ -10,10 +10,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntOffset
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavType
@@ -51,8 +54,21 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
-                    NavHost(navController = navController, startDestination = Nav.MainScreen.name) {
-                        composable(route = Nav.MainScreen.name) {
+                    NavHost(navController = navController, startDestination = Nav.MainScreen.name,
+                        enterTransition = {
+                        slideIn { fullSize -> IntOffset(fullSize.width, 0) }
+                    },
+                        popEnterTransition = {
+                            slideIn { fullSize -> IntOffset(-fullSize.width, 0) }
+                        },
+                        exitTransition = {
+                            slideOut { fullSize -> IntOffset(-fullSize.width, 0) }
+                        },
+                        popExitTransition = {
+                            slideOut { fullSize -> IntOffset(fullSize.width, 0) }
+                        },
+                        ) {
+                        composable(route = Nav.MainScreen.name,) {
                             MainScreen(
                                 modifier = Modifier.padding(innerPadding), mainScreenViewModel, navController)
                         }

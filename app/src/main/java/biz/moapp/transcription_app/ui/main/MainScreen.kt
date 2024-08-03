@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -150,7 +151,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                 }
 
                 is UIState.Success -> {
-                    AnimatedVisibility(visibleState = convertTextAreaState) {
+                    AnimatedVisibility(visibleState = convertTextAreaState, enter = slideInHorizontally()) {
                         Column(
                             modifier = Modifier
                                 .verticalScroll(rememberScrollState()),
