@@ -110,6 +110,7 @@ class MainScreenViewModel@Inject constructor(
     }
 
     fun recordingStart(recorder: MediaRecorder, filePath : String) : MediaRecorder{
+        _mainScreenUiState.value = UIState.NotYet
         return audioUseCase.recordingStart(recorder,filePath)
     }
 
