@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
 
@@ -24,13 +25,16 @@ fun BottomBar(navController : NavHostController){
         mutableStateOf(0)
     }
 
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val selectedRoute = backStackEntry?.destination?.route?.substringBefore("/")
+
     NavigationBar() {
         NAVIGATION_ITEMS.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = item.screenName == selectedRoute,
                 onClick = {
                     selectedItemIndex = index
-
+                    Log.d("--Navigation","onClick selectedItemIndex${selectedItemIndex}")
                     /**アイコンの遷移先**/
                     when(selectedItemIndex){
                         0 -> navController.navigate(Nav.MainScreen.name)
@@ -39,12 +43,14 @@ fun BottomBar(navController : NavHostController){
                     }
                 },
                 label = {
+                    Log.d("--Navigation","label index${index}")
                     /**アイコンのラベル取得**/
                     val title = when(index){
                         0 -> stringResource(R.string.navigationbar_home)
                         1 -> stringResource(R.string.navigationbar_summary)
                         else -> {""}
                     }
+                    Log.d("--Navigation","title${title}")
                     Text(text = title)
                 },
                 alwaysShowLabel = false,

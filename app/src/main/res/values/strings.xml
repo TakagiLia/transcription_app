@@ -5,18 +5,22 @@
 
     <!--テキスト固定文-->
     <string name="recording_content_title">録音した内容</string>
+    <string name="recording_help_start">録音が開始</string>
+    <string name="recording_help_stop">録音が一時停止</string>
+    <string name="recording_help_complete">録音完了、音声をテキスト化</string>
+
     <!--ボタンラベル-->
     <string name="recording_start">録音開始</string>
     <string name="recording_stop">録音停止</string>
     <string name="recording_complete">録音完了</string>
-    <string name="recording_summarize">会議記録作成</string>
+    <string name="recording_summarize">AI議事録作成</string>
 
     <!--トップバーの文字-->
     <string name="topbar_title">RecMemo</string>
 
     <!--ナビゲーションバーでの利用-->
     <string name="navigationbar_home">ホーム</string>
-    <string name="navigationbar_summary">会議記録</string>
+    <string name="navigationbar_summary">AI議事録</string>
 
     <!--サマリー画面で利用-->
 

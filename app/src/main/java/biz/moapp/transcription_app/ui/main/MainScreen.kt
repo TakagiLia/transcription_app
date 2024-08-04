@@ -7,9 +7,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,8 +20,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PauseCircleFilled
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircleFilled
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -45,7 +55,9 @@ import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
+import biz.moapp.transcription_app.ui.compose.HelpTextInIcon
 import biz.moapp.transcription_app.ui.compose.OperationButton
+import biz.moapp.transcription_app.ui.compose.RecordingButton
 import biz.moapp.transcription_app.ui.state.UIState
 import kotlinx.coroutines.delay
 
@@ -85,52 +97,102 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
         .fillMaxWidth()
         .height(80.dp)
 
-    /**UI**/
-    Column(modifier = modifier
-        .fillMaxHeight(0.7f)
-        .fillMaxWidth(1f),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        /**音声をテキスト変換時の結果表示**/
-        when(mainUiState){
-            is UIState.NotYet -> {}
-            is UIState.Loading -> {CircularProgressIndicator()}
-            is UIState.Success -> {
-                AnimatedVisibility(visibleState = convertTextAreaState) {
-                    Column(modifier = Modifier
-                        .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.Top,) {
 
-                        Spacer(modifier = Modifier.height(24.dp))
+    /**画面サイズの取得**/
+    BoxWithConstraints {
+        val width = maxWidth
+        val height = maxHeight
 
-                        OutlinedCard(
-                            border = BorderStroke(1.dp, systemColor),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp)
-                        ) {
+        /**UI**/
+        Column(
+            modifier = modifier
+                .fillMaxHeight(0.7f)
+                .fillMaxWidth(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            /**音声をテキスト変換時の結果表示**/
+            when (mainUiState) {
+                is UIState.NotYet -> {
 
-                            Text(
-                                text = stringResource(R.string.recording_content_title),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(4.dp)
-                            )
+                    /**ヘルプテキストの表示値を設定**/
+                    val recordingHelpText = when (isRecording) {
+                        true -> stringResource(R.string.recording_help_stop)
+                        false -> stringResource(R.string.recording_help_start)
+                    }
+                    val recordingHelpTextIcon = when (isRecording) {
+                        true -> Icons.Filled.PauseCircleFilled
+                        false -> Icons.Filled.PlayCircleFilled
+                    }
+                    val completeHelpText = when (isRecordingComplete) {
+                        true -> stringResource(R.string.recording_help_complete)
+                        false -> ""
+                    }
+                    val completeHelpTextIcon = when (isRecordingComplete) {
+                        true -> Icons.Filled.StopCircle
+                        false -> null
+                    }
 
-                            Spacer(modifier = Modifier.height(1.dp))
-
-                            Text(
-                                text = mainScreenViewModel.audioText.value,
-                                style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                modifier = Modifier.padding(4.dp)
-                            )
-                        }
-                        Column (
-                            verticalArrangement = Arrangement.Bottom,){
+                    /**ヘルプテキスト表示**/
+                    Column(modifier = modifier.padding(top = (width * 0.4f),),
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                        /**レコーディング操作ボタンのヘルプテキスト**/
+                        HelpTextInIcon(recordingHelpTextIcon, recordingHelpText)
+                        completeHelpTextIcon?.let {
+                            /**レコーディンング完了ボタンのヘルプテキスト**/
+                            HelpTextInIcon(it, completeHelpText)
                         }
                     }
                 }
+
+                is UIState.Loading -> {
+                    Column(modifier = modifier.padding(top = (width * 0.4f),)) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is UIState.Success -> {
+                    AnimatedVisibility(visibleState = convertTextAreaState, enter = slideInHorizontally()) {
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.Top,
+                        ) {
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            OutlinedCard(
+                                border = BorderStroke(1.dp, systemColor),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+
+                                Text(
+                                    text = stringResource(R.string.recording_content_title),
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(4.dp)
+                                )
+
+                                Spacer(modifier = Modifier.height(1.dp))
+
+                                Text(
+                                    text = mainScreenViewModel.audioText.value,
+                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                    modifier = Modifier.padding(4.dp)
+                                )
+                            }
+                            Column(
+                                verticalArrangement = Arrangement.Bottom,
+                            ) {
+                            }
+                        }
+                    }
+                }
+
+                is UIState.Error -> {
+                    Text(text = "Error: ${(mainUiState as UIState.Error).message}")
+                }
             }
-            is UIState.Error -> {Text(text = "Error: ${(mainUiState as UIState.Error).message}")}
         }
     }
 
@@ -140,7 +202,8 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         /**再生録音タイマー表示**/
-        Text(text = AppUtils.formatTime(recordedTime),
+        Text(
+            text = AppUtils.formatTime(recordedTime),
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold
         )
@@ -149,21 +212,24 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            /**レコーディング操作ボタン**/
-            OperationButton(
-                modifier = Modifier.weight(0.5f),
-                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(R.string.recording_stop),
-                clickAction = {
-                    isRecording = !isRecording
+            /**レコーディング操作ボタン（New）**/
+            RecordingButton(
+                isEnable = isRecording,
+                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(
+                    R.string.recording_stop
+                ),
+                icon = if (isRecording) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                onToggle = { newIsRecording ->
+                    isRecording = newIsRecording
                     if (isRecording) {
-                        if(isRecordingPause){
+                        if (isRecordingPause) {
                             Log.d("--recording", "Initial Start")
                             /**録音時間リセット**/
                             recordedTime = 0L
                             /**テキスト変換エリア非表示**/
                             convertTextAreaState.targetState = false
                             recorder = mainScreenViewModel.recordingStart(recorder, filePath)
-                        }else{
+                        } else {
                             Log.d("--recording", "Re Start")
                             /**レコーディング再開**/
                             recorder.resume()
@@ -172,7 +238,7 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                             /**レコード完了ボタンを非活性**/
                             isRecordingComplete = !isRecordingComplete
                         }
-                    }else {
+                    } else {
                         Log.d("--recording", "Stop")
                         /**レコーディング一時停止**/
                         recorder.pause()
@@ -181,21 +247,22 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                         /**レコード完了ボタンを活性**/
                         isRecordingComplete = !isRecordingComplete
                     }
-                }
+                },
             )
-            /**録音完了**/
-            OperationButton(
-                modifier = Modifier.weight(0.5f),
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            /**録音完了(New)**/
+            RecordingButton(isEnable = isRecordingComplete,
                 buttonName = stringResource(R.string.recording_complete),
-                enabled = isRecordingComplete,
-                clickAction = {
-                    Log.d("--recording", "Complete")
+                icon = Icons.Filled.Stop,
+                onToggle = {
                     /**レコーディング停止**/
                     mainScreenViewModel.recordingStop(recorder)
                     /**録音した内容を文字起こし**/
                     mainScreenViewModel.openAiAudioApi(filePath)
                     /**文字起こしエリア表示**/
-                    convertTextAreaState.targetState = !convertTextAreaState.currentState
+                    convertTextAreaState.targetState = true
                     /**ボタンのフラグを元に戻す**/
                     isRecording = false
                     isRecordingPause = true
@@ -203,17 +270,16 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                 }
             )
         }
-        /**要約ボタン**/
-        OperationButton(
-            modifier = maxModifierButton,
-            buttonName = stringResource(R.string.recording_summarize),
-            enabled = convertTextAreaState.currentState,
-            clickAction = {
-                /**要約表示画面に遷移**/
+            /**要約ボタン**/
+            OperationButton(
+                modifier = maxModifierButton,
+                buttonName = stringResource(R.string.recording_summarize),
+                enabled = convertTextAreaState.currentState,
+                clickAction = {
+                    /**要約表示画面に遷移**/
 //                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
-                navController.navigate("${Nav.SummaryScreen.name}/summarize")
-            }
-        )
-
+                    navController.navigate("${Nav.SummaryScreen.name}/summarize")
+                }
+            )
     }
 }
