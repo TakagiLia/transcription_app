@@ -26,7 +26,7 @@ fun TopBar(navigateBack : NavHostController){
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.topbar_title),
+                text = stringResource(R.string.app_name),
                 fontWeight = FontWeight.Bold
             )
         },
