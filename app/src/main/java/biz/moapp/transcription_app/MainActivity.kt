@@ -4,7 +4,9 @@ import android.Manifest.permission.RECORD_AUDIO
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -32,9 +34,14 @@ import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 import biz.moapp.transcription_app.ui.summary.SummaryScreen
 import biz.moapp.transcription_app.ui.theme.Transcription_appTheme
 import dagger.hilt.android.AndroidEntryPoint
+import org.vosk.Model
+import org.vosk.android.StorageService
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    /**モデルの初期化**/
+    private var model: Model? = null
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +58,10 @@ class MainActivity : ComponentActivity() {
                 if (granted != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
                 }
+
+                /**モデル読み込み**/
+                loadModel()
+
                 val navController = rememberNavController()
 
                 Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
@@ -86,6 +97,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    /**モデル読み込み**/
+    private fun loadModel() {
+        StorageService.unpack(
+            this, "vosk-model-ja", "model",
+            { m -> model = m
+                Toast.makeText(this, "Ready", Toast.LENGTH_SHORT).show()},
+            { e -> Log.d("--Error", "loadModel: ${e.message}",e)}
+        )
     }
 
     companion object {
