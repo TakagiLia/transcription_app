@@ -106,6 +106,11 @@ dependencies {
     /**マテリアルデザインのアイコン追加パッケージ**/
     implementation (libs.androidx.material.icons.extended)
 
+    /**Voskサンプルから引用 仮置きのためにバージョンカタログにしてません**/
+    implementation ("net.java.dev.jna:jna:5.13.0@aar")
+    implementation ("com.alphacephei:vosk-android:0.3.47@aar")
+    implementation (project(":models"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
