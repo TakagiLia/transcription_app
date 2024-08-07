@@ -18,7 +18,7 @@
 
     <!--ナビゲーションバーでの利用-->
     <string name="navigationbar_home">ホーム</string>
-    <string name="navigationbar_summary">AI議事録</string>
+    <string name="navigationbar_summary">AI要約</string>
 
     <!--サマリー画面で利用-->
 
