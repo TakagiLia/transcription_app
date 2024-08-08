@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -40,6 +41,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         /**アプリが起動している間は画面がロックされないようにしている**/
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        /**Homeの戻るの制御**/
+        onBackPressedDispatcher.addCallback(callback)
 
         setContent {
             val mainScreenViewModel: MainScreenViewModel by viewModels()
@@ -95,6 +99,14 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private val callback = object : OnBackPressedCallback(true) {
+        /**handleOnBackPressedを呼び出して、戻るキーを押したときの処理を記述**/
+        override fun handleOnBackPressed() {
+            /**何も記述しないのでハードの戻るボタンで戻らない**/
+            return
         }
     }
 
