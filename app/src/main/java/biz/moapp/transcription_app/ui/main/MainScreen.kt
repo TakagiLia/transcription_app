@@ -288,7 +288,10 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                 clickAction = {
                     /**要約表示画面に遷移**/
 //                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
-                    navController.navigate("${Nav.SummaryScreen.name}/summarize")
+                    navController.navigate("${Nav.SummaryScreen.name}/summarize"){
+                        popUpTo(Nav.MainScreen.name) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
