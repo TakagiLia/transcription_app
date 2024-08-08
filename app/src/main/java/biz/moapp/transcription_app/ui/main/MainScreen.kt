@@ -103,183 +103,183 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
 
     /**画面サイズの取得**/
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
-    BoxWithConstraints {
-        val width = maxWidth
-        val height = maxHeight
+        BoxWithConstraints {
+            val width = maxWidth
+            val height = maxHeight
 
-        /**UI**/
-        Column(
-            modifier = Modifier.padding(innerPadding)
-                .fillMaxHeight(0.7f)
-                .fillMaxWidth(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            /**音声をテキスト変換時の結果表示**/
-            when (mainUiState) {
-                is UIState.NotYet -> {
+            /**UI**/
+            Column(
+                modifier = Modifier.padding(innerPadding)
+                    .fillMaxHeight(0.7f)
+                    .fillMaxWidth(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                /**音声をテキスト変換時の結果表示**/
+                when (mainUiState) {
+                    is UIState.NotYet -> {
 
-                    /**ヘルプテキストの表示値を設定**/
-                    val recordingHelpText = when (isRecording) {
-                        true -> stringResource(R.string.recording_help_stop)
-                        false -> stringResource(R.string.recording_help_start)
-                    }
-                    val recordingHelpTextIcon = when (isRecording) {
-                        true -> Icons.Filled.PauseCircleFilled
-                        false -> Icons.Filled.PlayCircleFilled
-                    }
-                    val completeHelpText = when (isRecordingComplete) {
-                        true -> stringResource(R.string.recording_help_complete)
-                        false -> ""
-                    }
-                    val completeHelpTextIcon = when (isRecordingComplete) {
-                        true -> Icons.Filled.StopCircle
-                        false -> null
-                    }
-
-                    /**ヘルプテキスト表示**/
-                    Column(
-                        modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        /**レコーディング操作ボタンのヘルプテキスト**/
-                        HelpTextInIcon(recordingHelpTextIcon, recordingHelpText)
-                        completeHelpTextIcon?.let {
-                            /**レコーディンング完了ボタンのヘルプテキスト**/
-                            HelpTextInIcon(it, completeHelpText)
+                        /**ヘルプテキストの表示値を設定**/
+                        val recordingHelpText = when (isRecording) {
+                            true -> stringResource(R.string.recording_help_stop)
+                            false -> stringResource(R.string.recording_help_start)
                         }
-                    }
-                }
+                        val recordingHelpTextIcon = when (isRecording) {
+                            true -> Icons.Filled.PauseCircleFilled
+                            false -> Icons.Filled.PlayCircleFilled
+                        }
+                        val completeHelpText = when (isRecordingComplete) {
+                            true -> stringResource(R.string.recording_help_complete)
+                            false -> ""
+                        }
+                        val completeHelpTextIcon = when (isRecordingComplete) {
+                            true -> Icons.Filled.StopCircle
+                            false -> null
+                        }
 
-                is UIState.Loading -> {
-                    Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                is UIState.Success -> {
-                    AnimatedVisibility(
-                        visibleState = convertTextAreaState,
-                        enter = slideInHorizontally()
-                    ) {
+                        /**ヘルプテキスト表示**/
                         Column(
-                            modifier = Modifier
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.Top,
+                            modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            OutlinedCard(
-                                border = BorderStroke(1.dp, systemColor),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-
-                                Text(
-                                    text = stringResource(R.string.recording_content_title),
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(4.dp)
-                                )
-
-                                Spacer(modifier = Modifier.height(1.dp))
-
-                                Text(
-                                    text = mainScreenViewModel.audioText.value,
-                                    style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
-                                    modifier = Modifier.padding(4.dp)
-                                )
-                            }
-                            Column(
-                                verticalArrangement = Arrangement.Bottom,
-                            ) {
+                            /**レコーディング操作ボタンのヘルプテキスト**/
+                            HelpTextInIcon(recordingHelpTextIcon, recordingHelpText)
+                            completeHelpTextIcon?.let {
+                                /**レコーディンング完了ボタンのヘルプテキスト**/
+                                HelpTextInIcon(it, completeHelpText)
                             }
                         }
                     }
-                }
 
-                is UIState.Error -> {
-                    Text(text = "Error: ${(mainUiState as UIState.Error).message}")
+                    is UIState.Loading -> {
+                        Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    is UIState.Success -> {
+                        AnimatedVisibility(
+                            visibleState = convertTextAreaState,
+                            enter = slideInHorizontally()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState()),
+                                verticalArrangement = Arrangement.Top,
+                            ) {
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                OutlinedCard(
+                                    border = BorderStroke(1.dp, systemColor),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+
+                                    Text(
+                                        text = stringResource(R.string.recording_content_title),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(4.dp)
+                                    )
+
+                                    Spacer(modifier = Modifier.height(1.dp))
+
+                                    Text(
+                                        text = mainScreenViewModel.audioText.value,
+                                        style = TextStyle.Default.copy(lineBreak = LineBreak.Paragraph),
+                                        modifier = Modifier.padding(4.dp)
+                                    )
+                                }
+                                Column(
+                                    verticalArrangement = Arrangement.Bottom,
+                                ) {
+                                }
+                            }
+                        }
+                    }
+
+                    is UIState.Error -> {
+                        Text(text = "Error: ${(mainUiState as UIState.Error).message}")
+                    }
                 }
             }
         }
-    }
 
-    Column(modifier = Modifier.padding(innerPadding)
-        .fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        /**再生録音タイマー表示**/
-        Text(
-            text = AppUtils.formatTime(recordedTime),
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+        Column(modifier = Modifier.padding(innerPadding)
+            .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            /**レコーディング操作ボタン（New）**/
-            RecordingButton(
-                isEnable = isRecording,
-                buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(
-                    R.string.recording_stop
-                ),
-                icon = if (isRecording) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                onToggle = { newIsRecording ->
-                    isRecording = newIsRecording
-                    if (isRecording) {
-                        if (isRecordingPause) {
-                            Log.d("--recording", "Initial Start")
-                            /**録音時間リセット**/
-                            recordedTime = 0L
-                            /**テキスト変換エリア非表示**/
-                            convertTextAreaState.targetState = false
-                            recorder = mainScreenViewModel.recordingStart(recorder, filePath)
+
+            /**再生録音タイマー表示**/
+            Text(
+                text = AppUtils.formatTime(recordedTime),
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                /**レコーディング操作ボタン（New）**/
+                RecordingButton(
+                    isEnable = isRecording,
+                    buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(
+                        R.string.recording_stop
+                    ),
+                    icon = if (isRecording) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                    onToggle = { newIsRecording ->
+                        isRecording = newIsRecording
+                        if (isRecording) {
+                            if (isRecordingPause) {
+                                Log.d("--recording", "Initial Start")
+                                /**録音時間リセット**/
+                                recordedTime = 0L
+                                /**テキスト変換エリア非表示**/
+                                convertTextAreaState.targetState = false
+                                recorder = mainScreenViewModel.recordingStart(recorder, filePath)
+                            } else {
+                                Log.d("--recording", "Re Start")
+                                /**レコーディング再開**/
+                                recorder.resume()
+                                /**レコードをポーズではない状態にする**/
+                                isRecordingPause = !isRecordingPause
+                                /**レコード完了ボタンを非活性**/
+                                isRecordingComplete = !isRecordingComplete
+                            }
                         } else {
-                            Log.d("--recording", "Re Start")
-                            /**レコーディング再開**/
-                            recorder.resume()
-                            /**レコードをポーズではない状態にする**/
+                            Log.d("--recording", "Stop")
+                            /**レコーディング一時停止**/
+                            recorder.pause()
+                            /**レコードをポーズにする**/
                             isRecordingPause = !isRecordingPause
-                            /**レコード完了ボタンを非活性**/
+                            /**レコード完了ボタンを活性**/
                             isRecordingComplete = !isRecordingComplete
                         }
-                    } else {
-                        Log.d("--recording", "Stop")
-                        /**レコーディング一時停止**/
-                        recorder.pause()
-                        /**レコードをポーズにする**/
-                        isRecordingPause = !isRecordingPause
-                        /**レコード完了ボタンを活性**/
-                        isRecordingComplete = !isRecordingComplete
+                    },
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                /**録音完了(New)**/
+                RecordingButton(isEnable = isRecordingComplete,
+                    buttonName = stringResource(R.string.recording_complete),
+                    icon = Icons.Filled.Stop,
+                    onToggle = {
+                        /**レコーディング停止**/
+                        mainScreenViewModel.recordingStop(recorder)
+                        /**録音した内容を文字起こし**/
+                        mainScreenViewModel.openAiAudioApi(filePath)
+                        /**文字起こしエリア表示**/
+                        convertTextAreaState.targetState = true
+                        /**ボタンのフラグを元に戻す**/
+                        isRecording = false
+                        isRecordingPause = true
+                        isRecordingComplete = false
                     }
-                },
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            /**録音完了(New)**/
-            RecordingButton(isEnable = isRecordingComplete,
-                buttonName = stringResource(R.string.recording_complete),
-                icon = Icons.Filled.Stop,
-                onToggle = {
-                    /**レコーディング停止**/
-                    mainScreenViewModel.recordingStop(recorder)
-                    /**録音した内容を文字起こし**/
-                    mainScreenViewModel.openAiAudioApi(filePath)
-                    /**文字起こしエリア表示**/
-                    convertTextAreaState.targetState = true
-                    /**ボタンのフラグを元に戻す**/
-                    isRecording = false
-                    isRecordingPause = true
-                    isRecordingComplete = false
-                }
-            )
-        }
+                )
+            }
             /**要約ボタン**/
             OperationButton(
                 modifier = maxModifierButton,
@@ -291,6 +291,6 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                     navController.navigate("${Nav.SummaryScreen.name}/summarize")
                 }
             )
-    }
+        }
     }
 }
