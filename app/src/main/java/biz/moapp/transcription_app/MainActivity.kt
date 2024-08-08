@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -13,8 +14,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.core.app.ActivityCompat
@@ -25,8 +26,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import biz.moapp.transcription_app.navigation.Nav
-import biz.moapp.transcription_app.ui.common.TopBar
-import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
 import biz.moapp.transcription_app.ui.main.MainScreen
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 import biz.moapp.transcription_app.ui.summary.SummaryScreen
@@ -43,18 +42,31 @@ class MainActivity : ComponentActivity() {
         /**アプリが起動している間は画面がロックされないようにしている**/
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        /**Homeの戻るの制御**/
+        onBackPressedDispatcher.addCallback(callback)
+
         setContent {
             val mainScreenViewModel: MainScreenViewModel by viewModels()
+
             Transcription_appTheme {
+
                 val granted = ContextCompat.checkSelfPermission(this, RECORD_AUDIO)
 
                 if (granted != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, arrayOf(RECORD_AUDIO), PERMISSIONS_RECORD_AUDIO)
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(RECORD_AUDIO),
+                        PERMISSIONS_RECORD_AUDIO
+                    )
                 }
                 val navController = rememberNavController()
 
-                Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
-                    NavHost(navController = navController, startDestination = Nav.MainScreen.name,
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    NavHost(
+                        navController = navController, startDestination = Nav.MainScreen.name,
                         enterTransition = {
                         slideIn { fullSize -> IntOffset(fullSize.width, 0) }
                     },
@@ -70,17 +82,31 @@ class MainActivity : ComponentActivity() {
                         ) {
                         composable(route = Nav.MainScreen.name,) {
                             MainScreen(
-                                modifier = Modifier.padding(innerPadding), mainScreenViewModel, navController)
+                                mainScreenViewModel,
+                                navController
+                            )
                         }
                         composable(route = "${Nav.SummaryScreen.name}/{action}",
                             arguments = listOf(navArgument("action"){ type = NavType.StringType})
                         ) {backStackEntry ->
                             val action = backStackEntry.arguments?.getString("action")
-                            SummaryScreen(modifier = Modifier.padding(innerPadding), mainScreenViewModel, action ?: "")
+                            SummaryScreen(
+                                mainScreenViewModel,
+                                action ?: "",
+                                navController
+                            )
                         }
                     }
                 }
             }
+        }
+    }
+
+    private val callback = object : OnBackPressedCallback(true) {
+        /**handleOnBackPressedを呼び出して、戻るキーを押したときの処理を記述**/
+        override fun handleOnBackPressed() {
+            /**何も記述しないのでハードの戻るボタンで戻らない**/
+            return
         }
     }
 

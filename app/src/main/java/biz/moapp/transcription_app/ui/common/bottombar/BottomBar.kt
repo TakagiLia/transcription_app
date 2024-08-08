@@ -37,8 +37,17 @@ fun BottomBar(navController : NavHostController){
                     Log.d("--Navigation","onClick selectedItemIndex${selectedItemIndex}")
                     /**アイコンの遷移先**/
                     when(selectedItemIndex){
-                        0 -> navController.navigate(Nav.MainScreen.name)
-                        1 -> navController.navigate("${Nav.SummaryScreen.name}/bottomBar")
+                        0 ->
+                            if(selectedRoute != Nav.MainScreen.name) navController.navigate(Nav.MainScreen.name){
+                                backStackEntry?.destination?.route?.let {
+                                    popUpTo(it) { inclusive = true }
+                                }
+                                launchSingleTop = true
+                            }
+                        1 -> if(selectedRoute != Nav.SummaryScreen.name) navController.navigate("${Nav.SummaryScreen.name}/bottomBar"){
+                            popUpTo(Nav.MainScreen.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
                         2 -> Log.d("--BottomBar","right")
                     }
                 },
