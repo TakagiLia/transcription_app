@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,14 +30,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.R
+import biz.moapp.transcription_app.ui.common.TopBar
+import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
 import biz.moapp.transcription_app.ui.compose.EditField
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
 import biz.moapp.transcription_app.ui.state.MainUiState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, action: String) {
+fun SummaryScreen(mainScreenViewModel: MainScreenViewModel, action: String,navController:NavHostController ) {
 
 
     var isEditable by remember { mutableStateOf(false) }
@@ -56,13 +60,14 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
         .height(80.dp)
 
     /**画面サイズの取得**/
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
     BoxWithConstraints {
         val width = maxWidth
         val height = maxHeight
 
     /**UI**/
     Column(
-        modifier = modifier
+        modifier = Modifier.padding(innerPadding)
 //        .fillMaxHeight(0.75f)
             .fillMaxWidth(1f)
             .verticalScroll(rememberScrollState()),
@@ -71,14 +76,14 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
     ) {
         /**要約時の結果表示**/
         when (mainScreenViewModel.uiState.sendResultState) {
-            is MainUiState.SendResultState.NotYet -> Column(modifier = modifier.padding(top = (width * 0.5f),)) {
+            is MainUiState.SendResultState.NotYet -> Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.5f),)) {
                 Text(
                     stringResource(R.string.summary_no_content)
                 )
             }
 
             is MainUiState.SendResultState.Loading -> {
-                Column(modifier = modifier.padding(top = (width * 0.4f),)) {
+                Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
                     CircularProgressIndicator()
                 }
             }
@@ -128,4 +133,5 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
 //            clickAction = { mainScreenViewModel.summarySave(mainScreenViewModel.summaryText.value) }
 //        )
 //    }
+    }
 }
