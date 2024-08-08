@@ -267,16 +267,18 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                     buttonName = stringResource(R.string.recording_complete),
                     icon = Icons.Filled.Stop,
                     onToggle = {
-                        /**レコーディング停止**/
-                        mainScreenViewModel.recordingStop(recorder)
-                        /**録音した内容を文字起こし**/
-                        mainScreenViewModel.openAiAudioApi(filePath)
-                        /**文字起こしエリア表示**/
-                        convertTextAreaState.targetState = true
-                        /**ボタンのフラグを元に戻す**/
-                        isRecording = false
-                        isRecordingPause = true
-                        isRecordingComplete = false
+                        if(isRecordingComplete) {
+                            /**レコーディング停止**/
+                            mainScreenViewModel.recordingStop(recorder)
+                            /**録音した内容を文字起こし**/
+                            mainScreenViewModel.openAiAudioApi(filePath)
+                            /**文字起こしエリア表示**/
+                            convertTextAreaState.targetState = true
+                            /**ボタンのフラグを元に戻す**/
+                            isRecording = false
+                            isRecordingPause = true
+                            isRecordingComplete = false
+                        }
                     }
                 )
             }
