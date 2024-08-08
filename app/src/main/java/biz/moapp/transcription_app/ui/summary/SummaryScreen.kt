@@ -61,57 +61,57 @@ fun SummaryScreen(mainScreenViewModel: MainScreenViewModel, action: String,navCo
 
     /**画面サイズの取得**/
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
-    BoxWithConstraints {
-        val width = maxWidth
-        val height = maxHeight
+        BoxWithConstraints {
+            val width = maxWidth
+            val height = maxHeight
 
-    /**UI**/
-    Column(
-        modifier = Modifier.padding(innerPadding)
-//        .fillMaxHeight(0.75f)
-            .fillMaxWidth(1f)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        /**要約時の結果表示**/
-        when (mainScreenViewModel.uiState.sendResultState) {
-            is MainUiState.SendResultState.NotYet -> Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.5f),)) {
-                Text(
-                    stringResource(R.string.summary_no_content)
-                )
-            }
-
-            is MainUiState.SendResultState.Loading -> {
-                Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
-                    CircularProgressIndicator()
-                }
-            }
-
-            is MainUiState.SendResultState.Success -> {
-                (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
-                    Log.d("--result response：　", value)
-                    Spacer(modifier = Modifier.height(24.dp))
-                    OutlinedCard(
-                        border = BorderStroke(1.dp, systemColor),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    ) {
+            /**UI**/
+            Column(
+                modifier = Modifier.padding(innerPadding)
+        //        .fillMaxHeight(0.75f)
+                    .fillMaxWidth(1f)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                /**要約時の結果表示**/
+                when (mainScreenViewModel.uiState.sendResultState) {
+                    is MainUiState.SendResultState.NotYet -> Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.5f),)) {
                         Text(
-                            text = stringResource(R.string.summary_title),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(4.dp)
+                            stringResource(R.string.summary_no_content)
                         )
-                        EditField(mainScreenViewModel, isEditable)
                     }
+
+                    is MainUiState.SendResultState.Loading -> {
+                        Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    is MainUiState.SendResultState.Success -> {
+                        (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
+                            Log.d("--result response：　", value)
+                            Spacer(modifier = Modifier.height(24.dp))
+                            OutlinedCard(
+                                border = BorderStroke(1.dp, systemColor),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.summary_title),
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(4.dp)
+                                )
+                                EditField(mainScreenViewModel, isEditable)
+                            }
+                        }
+                    }
+
+                    is MainUiState.SendResultState.Error -> {}
                 }
             }
-
-            is MainUiState.SendResultState.Error -> {}
         }
-    }
-}
 //    Column(
 //        modifier = modifier
 //            .fillMaxSize(),
