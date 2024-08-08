@@ -78,7 +78,9 @@ fun SummaryScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel,
             }
 
             is MainUiState.SendResultState.Loading -> {
-                CircularProgressIndicator()
+                Column(modifier = modifier.padding(top = (width * 0.4f),)) {
+                    CircularProgressIndicator()
+                }
             }
 
             is MainUiState.SendResultState.Success -> {
