@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +56,8 @@ import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
+import biz.moapp.transcription_app.ui.common.TopBar
+import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
 import biz.moapp.transcription_app.ui.compose.HelpTextInIcon
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.compose.RecordingButton
@@ -65,7 +68,7 @@ import kotlinx.coroutines.delay
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, navController: NavHostController){
+fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostController) {
 
     var isRecording by remember { mutableStateOf(false) }
     var isRecordingPause by remember { mutableStateOf(true) }
@@ -99,13 +102,14 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
 
 
     /**画面サイズの取得**/
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
     BoxWithConstraints {
         val width = maxWidth
         val height = maxHeight
 
         /**UI**/
         Column(
-            modifier = modifier
+            modifier = Modifier.padding(innerPadding)
                 .fillMaxHeight(0.7f)
                 .fillMaxWidth(1f),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -133,8 +137,10 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     }
 
                     /**ヘルプテキスト表示**/
-                    Column(modifier = modifier.padding(top = (width * 0.4f),),
-                            horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         /**レコーディング操作ボタンのヘルプテキスト**/
                         HelpTextInIcon(recordingHelpTextIcon, recordingHelpText)
                         completeHelpTextIcon?.let {
@@ -145,13 +151,16 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                 }
 
                 is UIState.Loading -> {
-                    Column(modifier = modifier.padding(top = (width * 0.4f),)) {
+                    Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
                         CircularProgressIndicator()
                     }
                 }
 
                 is UIState.Success -> {
-                    AnimatedVisibility(visibleState = convertTextAreaState, enter = slideInHorizontally()) {
+                    AnimatedVisibility(
+                        visibleState = convertTextAreaState,
+                        enter = slideInHorizontally()
+                    ) {
                         Column(
                             modifier = Modifier
                                 .verticalScroll(rememberScrollState()),
@@ -196,10 +205,11 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
         }
     }
 
-    Column(modifier = modifier
+    Column(modifier = Modifier.padding(innerPadding)
         .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         /**再生録音タイマー表示**/
         Text(
@@ -281,5 +291,6 @@ fun MainScreen(modifier : Modifier, mainScreenViewModel: MainScreenViewModel, na
                     navController.navigate("${Nav.SummaryScreen.name}/summarize")
                 }
             )
+    }
     }
 }
