@@ -34,6 +34,6 @@ fun OperationButton(modifier: Modifier, enabled: Boolean = true, buttonName : St
         icon?.let{
             Icon(imageVector = it,contentDescription = "")
         }
-        Text(modifier = Modifier.padding(6.dp), text = buttonName)
+        Text(text = buttonName)
     }
 }
