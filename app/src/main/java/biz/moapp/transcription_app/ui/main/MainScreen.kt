@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,8 +55,6 @@ import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.AppUtils
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.navigation.Nav
-import biz.moapp.transcription_app.ui.common.TopBar
-import biz.moapp.transcription_app.ui.common.bottombar.BottomBar
 import biz.moapp.transcription_app.ui.compose.HelpTextInIcon
 import biz.moapp.transcription_app.ui.compose.OperationButton
 import biz.moapp.transcription_app.ui.compose.RecordingButton
@@ -68,7 +65,7 @@ import kotlinx.coroutines.delay
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostController) {
+fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenViewModel, navController: NavHostController) {
 
     var isRecording by remember { mutableStateOf(false) }
     var isRecordingPause by remember { mutableStateOf(true) }
@@ -102,14 +99,13 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
 
 
     /**画面サイズの取得**/
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = { TopBar(navController) }, bottomBar = { BottomBar(navController) }) { innerPadding ->
         BoxWithConstraints {
             val width = maxWidth
             val height = maxHeight
 
             /**UI**/
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = modifier
                     .fillMaxHeight(0.7f)
                     .fillMaxWidth(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -138,7 +134,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
 
                         /**ヘルプテキスト表示**/
                         Column(
-                            modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),),
+                            modifier = modifier.padding(top = (width * 0.4f),),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             /**レコーディング操作ボタンのヘルプテキスト**/
@@ -151,7 +147,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                     }
 
                     is UIState.Loading -> {
-                        Column(modifier = Modifier.padding(innerPadding).padding(top = (width * 0.4f),)) {
+                        Column(modifier = modifier.padding(top = (width * 0.4f),)) {
                             CircularProgressIndicator()
                         }
                     }
@@ -205,7 +201,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
             }
         }
 
-        Column(modifier = Modifier.padding(innerPadding)
+        Column(modifier = modifier
             .fillMaxSize(),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -300,5 +296,4 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                 )
             }
         }
-    }
 }
