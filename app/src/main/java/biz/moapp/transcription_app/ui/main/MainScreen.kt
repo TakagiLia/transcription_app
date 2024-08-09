@@ -24,10 +24,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PauseCircleFilled
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material3.CircularProgressIndicator
@@ -121,7 +120,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                         }
                         val recordingHelpTextIcon = when (isRecording) {
                             true -> Icons.Filled.PauseCircleFilled
-                            false -> Icons.Filled.PlayCircleFilled
+                            false -> Icons.Filled.Mic
                         }
                         val completeHelpText = when (isRecordingComplete) {
                             true -> stringResource(R.string.recording_help_complete)
@@ -248,7 +247,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                     buttonName = if (!isRecording) stringResource(R.string.recording_start) else stringResource(
                         R.string.recording_stop
                     ),
-                    icon = if (isRecording) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                    icon = if (isRecording) Icons.Filled.Pause else Icons.Filled.Mic,
                     onToggle = { newIsRecording ->
                         isRecording = newIsRecording
                         if (isRecording) {
