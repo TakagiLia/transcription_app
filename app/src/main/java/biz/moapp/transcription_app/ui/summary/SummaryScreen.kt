@@ -34,7 +34,7 @@ import androidx.navigation.NavHostController
 import biz.moapp.transcription_app.R
 import biz.moapp.transcription_app.ui.compose.EditField
 import biz.moapp.transcription_app.ui.main.MainScreenViewModel
-import biz.moapp.transcription_app.ui.state.MainUiState
+import biz.moapp.transcription_app.ui.state.SummaryUiState
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -72,21 +72,21 @@ fun SummaryScreen(modifier: Modifier = Modifier,mainScreenViewModel: MainScreenV
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 /**要約時の結果表示**/
-                when (mainScreenViewModel.uiState.sendResultState) {
-                    is MainUiState.SendResultState.NotYet -> Column(modifier = modifier.padding(top = (width * 0.5f),)) {
+                when (mainScreenViewModel.summaryUiState.sendResultState) {
+                    is SummaryUiState.SendResultState.NotYet -> Column(modifier = modifier.padding(top = (width * 0.5f),)) {
                         Text(
                             stringResource(R.string.summary_no_content)
                         )
                     }
 
-                    is MainUiState.SendResultState.Loading -> {
+                    is SummaryUiState.SendResultState.Loading -> {
                         Column(modifier = modifier.padding(top = (width * 0.4f),)) {
                             CircularProgressIndicator()
                         }
                     }
 
-                    is MainUiState.SendResultState.Success -> {
-                        (mainScreenViewModel.uiState.sendResultState as MainUiState.SendResultState.Success).results.map { value ->
+                    is SummaryUiState.SendResultState.Success -> {
+                        (mainScreenViewModel.summaryUiState.sendResultState as SummaryUiState.SendResultState.Success).results.map { value ->
                             Log.d("--result response：　", value)
                             Spacer(modifier = Modifier.height(24.dp))
                             OutlinedCard(
@@ -105,7 +105,7 @@ fun SummaryScreen(modifier: Modifier = Modifier,mainScreenViewModel: MainScreenV
                         }
                     }
 
-                    is MainUiState.SendResultState.Error -> {}
+                    is SummaryUiState.SendResultState.Error -> {}
                 }
             }
         }
