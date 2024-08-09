@@ -31,11 +31,11 @@ fun RecordingButton(isEnable: Boolean,
             onToggle(!isEnable)
         },
         modifier = Modifier
-            .size(72.dp)
+            .size(64.dp)
             .background(backGroundColor, CircleShape),
     ) {
         Icon(
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(32.dp),
             imageVector = icon,
             contentDescription = "",
             tint = Color.White
