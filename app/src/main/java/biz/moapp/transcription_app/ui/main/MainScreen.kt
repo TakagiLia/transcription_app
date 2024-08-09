@@ -220,7 +220,8 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 /**レコーディング操作ボタン（New）**/
                 RecordingButton(
@@ -281,21 +282,22 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                         }
                     }
                 )
-            }
-            /**要約ボタン**/
-            OperationButton(
-                modifier = maxModifierButton,
-                buttonName = stringResource(R.string.recording_summarize),
-                enabled = convertTextAreaState.currentState,
-                clickAction = {
-                    /**要約表示画面に遷移**/
-//                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
-                    navController.navigate("${Nav.SummaryScreen.name}/summarize"){
-                        popUpTo(Nav.MainScreen.name) { inclusive = true }
-                        launchSingleTop = true
+
+                /**要約ボタン**/
+                OperationButton(
+                    modifier = Modifier.height(88.dp),
+                    buttonName = stringResource(R.string.recording_summarize),
+                    enabled = convertTextAreaState.currentState,
+                    clickAction = {
+                        /**要約表示画面に遷移**/
+        //                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
+                        navController.navigate("${Nav.SummaryScreen.name}/summarize") {
+                            popUpTo(Nav.MainScreen.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
