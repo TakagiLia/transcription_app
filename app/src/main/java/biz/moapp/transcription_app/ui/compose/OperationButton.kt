@@ -21,7 +21,7 @@ fun OperationButton(modifier: Modifier, enabled: Boolean = true, buttonName : St
     var shadowButton = remember { mutableIntStateOf(6) }
     Button(modifier = modifier
         .padding(16.dp),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(40.dp),
         enabled = enabled,
         elevation =  ButtonDefaults.buttonElevation(defaultElevation = shadowButton.intValue.dp,),
         onClick = {
