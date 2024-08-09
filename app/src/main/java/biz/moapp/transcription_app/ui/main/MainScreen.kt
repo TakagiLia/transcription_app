@@ -220,8 +220,32 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.width(40.dp))
+                /**録音完了(New)**/
+                RecordingButton(isEnable = isRecordingComplete,
+                    buttonName = stringResource(R.string.recording_complete),
+                    icon = Icons.Filled.Stop,
+                    onToggle = {
+                        if(isRecordingComplete) {
+                            /**レコーディング停止**/
+                            mainScreenViewModel.recordingStop(recorder)
+                            /**録音した内容を文字起こし**/
+                            mainScreenViewModel.openAiAudioApi(filePath)
+                            /**文字起こしエリア表示**/
+                            convertTextAreaState.targetState = true
+                            /**ボタンのフラグを元に戻す**/
+                            isRecording = false
+                            isRecordingPause = true
+                            isRecordingComplete = false
+                        }
+                    }
+                )
+
+                Spacer(modifier = Modifier.width(40.dp))
+
                 /**レコーディング操作ボタン（New）**/
                 RecordingButton(
                     isEnable = isRecording,
@@ -259,43 +283,22 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel, navController: NavHostC
                         }
                     },
                 )
-
                 Spacer(modifier = Modifier.width(16.dp))
-
-                /**録音完了(New)**/
-                RecordingButton(isEnable = isRecordingComplete,
-                    buttonName = stringResource(R.string.recording_complete),
-                    icon = Icons.Filled.Stop,
-                    onToggle = {
-                        if(isRecordingComplete) {
-                            /**レコーディング停止**/
-                            mainScreenViewModel.recordingStop(recorder)
-                            /**録音した内容を文字起こし**/
-                            mainScreenViewModel.openAiAudioApi(filePath)
-                            /**文字起こしエリア表示**/
-                            convertTextAreaState.targetState = true
-                            /**ボタンのフラグを元に戻す**/
-                            isRecording = false
-                            isRecordingPause = true
-                            isRecordingComplete = false
+                /**要約ボタン**/
+                OperationButton(
+                    modifier = Modifier.height(88.dp),
+                    buttonName = stringResource(R.string.recording_summarize),
+                    enabled = convertTextAreaState.currentState,
+                    clickAction = {
+                        /**要約表示画面に遷移**/
+        //                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
+                        navController.navigate("${Nav.SummaryScreen.name}/summarize") {
+                            popUpTo(Nav.MainScreen.name) { inclusive = true }
+                            launchSingleTop = true
                         }
                     }
                 )
             }
-            /**要約ボタン**/
-            OperationButton(
-                modifier = maxModifierButton,
-                buttonName = stringResource(R.string.recording_summarize),
-                enabled = convertTextAreaState.currentState,
-                clickAction = {
-                    /**要約表示画面に遷移**/
-//                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
-                    navController.navigate("${Nav.SummaryScreen.name}/summarize"){
-                        popUpTo(Nav.MainScreen.name) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            )
         }
     }
 }
