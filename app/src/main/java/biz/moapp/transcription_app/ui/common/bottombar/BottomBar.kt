@@ -35,13 +35,15 @@ fun BottomBar(navController : NavHostController){
                 onClick = {
                     selectedItemIndex = index
                     Log.d("--Navigation","onClick selectedItemIndex${selectedItemIndex}")
-                    /**アイコンの遷移先**/
                     when(selectedItemIndex){
                         0 ->
                             if(selectedRoute != Nav.MainScreen.name) navController.navigate(Nav.MainScreen.name){
+                                /**現在の画面までのバックスタックをクリアし、戻るボタンで前の画面に戻れないようにする
+                                 * popUpTo = 指定した画面までのバックスタック（遷移履歴）をクリア**/
                                 backStackEntry?.destination?.route?.let {
                                     popUpTo(it) { inclusive = true }
                                 }
+                                /**同じ画面への重複遷移を防ぐ**/
                                 launchSingleTop = true
                             }
                         1 -> if(selectedRoute != Nav.SummaryScreen.name) navController.navigate("${Nav.SummaryScreen.name}/bottomBar"){

@@ -13,7 +13,7 @@ import biz.moapp.transcription_app.model.ChatCompletions
 import biz.moapp.transcription_app.network.OpenAiAudioApi
 import biz.moapp.transcription_app.network.RetrofitOpenAiNetwork
 import biz.moapp.transcription_app.network.TranscriptionResponse
-import biz.moapp.transcription_app.ui.state.MainUiState
+import biz.moapp.transcription_app.ui.state.SummaryUiState
 import biz.moapp.transcription_app.ui.state.UIState
 import biz.moapp.transcription_app.usecase.AudioUseCase
 import biz.moapp.transcription_app.usecase.FirebaseUseCase
@@ -35,7 +35,7 @@ class MainScreenViewModel@Inject constructor(
     private val firebaseUseCase: FirebaseUseCase
 ): ViewModel() {
 
-    var uiState by mutableStateOf(MainUiState())
+    var summaryUiState by mutableStateOf(SummaryUiState())
         private set
 
     private val _mainScreenUiState = MutableStateFlow<UIState<TranscriptionResponse>>(UIState.NotYet)
@@ -57,7 +57,7 @@ class MainScreenViewModel@Inject constructor(
 
     fun summary(message: String){
         /**ローディング**/
-        uiState = uiState.copy(sendResultState = MainUiState.SendResultState.Loading)
+        summaryUiState = summaryUiState.copy(sendResultState = SummaryUiState.SendResultState.Loading)
         viewModelScope.launch {
             try{
                 val result = withContext(ioDispatcher) {
@@ -65,22 +65,22 @@ class MainScreenViewModel@Inject constructor(
                 }
 
                 /**UIに反映**/
-                uiState = when (result) {
+                summaryUiState = when (result) {
                     /**成功時**/
                     is ChatCompletions.Response.Success -> {
                         result.choices.map { value -> value.message?.content?.let{ _summaryText.value = it} }
 
                         Log.d("--result response１-","${result.choices.map { it.message?.content }}")
-                        uiState.copy(
-                            sendResultState = MainUiState.SendResultState.Success(
+                        summaryUiState.copy(
+                            sendResultState = SummaryUiState.SendResultState.Success(
                                 result.choices.map { it.message?.content ?: "No Text...." }
                             )
                         )
                     }
                     /**失敗時時**/
                     is ChatCompletions.Response.Failure -> {
-                        uiState.copy(
-                            sendResultState = MainUiState.SendResultState.Error(
+                        summaryUiState.copy(
+                            sendResultState = SummaryUiState.SendResultState.Error(
                                 result.exception.message ?: "unknown error"
                             )
                         )
@@ -110,12 +110,23 @@ class MainScreenViewModel@Inject constructor(
     }
 
     fun recordingStart(recorder: MediaRecorder, filePath : String) : MediaRecorder{
-        _mainScreenUiState.value = UIState.NotYet
+        _mainScreenUiState.value = UIState.RecordingStart
         return audioUseCase.recordingStart(recorder,filePath)
     }
 
     fun recordingStop(recorder: MediaRecorder){
-        audioUseCase.recordingStop(recorder)
+        _mainScreenUiState.value = UIState.RecordingComplete
+            audioUseCase.recordingStop(recorder)
+    }
+
+    fun recordingPause(recorder: MediaRecorder){
+        _mainScreenUiState.value = UIState.RecordingPause
+        recorder.pause()
+    }
+
+    fun recordingResume(recorder: MediaRecorder){
+        _mainScreenUiState.value = UIState.RecordingStart
+        recorder.resume()
     }
 
     fun audioPlay(filePath : String) : MediaPlayer?{

@@ -1,6 +1,6 @@
 package biz.moapp.transcription_app.ui.state
 
-data class MainUiState(
+data class SummaryUiState(
     val prompt: String = "",
     val sendResultState: SendResultState = SendResultState.NotYet,
 ){
