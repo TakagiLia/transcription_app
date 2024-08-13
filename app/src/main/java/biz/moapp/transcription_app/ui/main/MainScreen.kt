@@ -85,11 +85,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
         }
     }
 
-    val maxModifierButton : Modifier = Modifier
-        .fillMaxWidth()
-        .height(80.dp)
-
-
     /**画面サイズの取得**/
         BoxWithConstraints {
             val width = maxWidth
