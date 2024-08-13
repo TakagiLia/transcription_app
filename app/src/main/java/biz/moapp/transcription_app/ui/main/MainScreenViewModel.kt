@@ -110,12 +110,22 @@ class MainScreenViewModel@Inject constructor(
     }
 
     fun recordingStart(recorder: MediaRecorder, filePath : String) : MediaRecorder{
-        _mainScreenUiState.value = UIState.NotYet
+        _mainScreenUiState.value = UIState.RecordingStart
         return audioUseCase.recordingStart(recorder,filePath)
     }
 
     fun recordingStop(recorder: MediaRecorder){
         audioUseCase.recordingStop(recorder)
+    }
+
+    fun recordingPause(recorder: MediaRecorder){
+        _mainScreenUiState.value = UIState.RecordingPause
+        recorder.pause()
+    }
+
+    fun recordingResume(recorder: MediaRecorder){
+        _mainScreenUiState.value = UIState.RecordingStart
+        recorder.resume()
     }
 
     fun audioPlay(filePath : String) : MediaPlayer?{
