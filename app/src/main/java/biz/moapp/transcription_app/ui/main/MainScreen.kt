@@ -175,7 +175,13 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                     }
 
                     is UIState.Error -> {
-                        Text(text = "Error: ${(mainUiState as UIState.Error).message}")
+                        Column(
+                            modifier = modifier.padding(top = (width * 0.4f),),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = stringResource(R.string.recording_error))
+                        }
+                        Log.d("--AudioToText Error","Error: ${(mainUiState as UIState.Error).message}")
                     }
                 }
             }
