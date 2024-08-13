@@ -2,14 +2,13 @@ package biz.moapp.transcription_app.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,16 +29,16 @@ fun BaseScreen(mainScreenViewModel: MainScreenViewModel) {
         NavHost(
             navController = navController, startDestination = Nav.MainScreen.name,
             enterTransition = {
-                slideIn { fullSize -> IntOffset(fullSize.width, 0) }
+                EnterTransition.None
             },
             popEnterTransition = {
-                slideIn { fullSize -> IntOffset(-fullSize.width, 0) }
+                EnterTransition.None
             },
             exitTransition = {
-                slideOut { fullSize -> IntOffset(-fullSize.width, 0) }
+                ExitTransition.None
             },
             popExitTransition = {
-                slideOut { fullSize -> IntOffset(fullSize.width, 0) }
+                ExitTransition.None
             },
         ) {
             composable(route = Nav.MainScreen.name,) {
