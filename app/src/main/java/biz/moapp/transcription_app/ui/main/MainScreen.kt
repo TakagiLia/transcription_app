@@ -138,8 +138,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                     }
 
                     is UIState.Success -> {
-                        /**文字起こしボタン表示**/
-                        isAudioToText = true
                             Column(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState()),
@@ -201,24 +199,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.width(40.dp))
-                /**録音完了(New)**/
-                RecordingButton(isEnable = isRecordingComplete,
-                    buttonName = stringResource(R.string.recording_complete),
-                    icon = Icons.Filled.Stop,
-                    onToggle = {
-                        if(isRecordingComplete) {
-                            /**レコーディング停止**/
-                            mainScreenViewModel.recordingStop(recorder)
-                            /**録音した内容を文字起こし**/
-                            mainScreenViewModel.openAiAudioApi(filePath)
-                            /**ボタンのフラグを元に戻す**/
-                            isRecording = false
-                            isRecordingPause = true
-                            isRecordingComplete = false
-                        }
-                    }
-                )
 
                 Spacer(modifier = Modifier.width(40.dp))
                 /**レコーディング操作ボタン（New）**/
@@ -257,7 +237,29 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                         }
                     },
                 )
+
+                Spacer(modifier = Modifier.width(40.dp))
+
+                /**録音完了(New)**/
+                RecordingButton(isEnable = isRecordingComplete,
+                    buttonName = stringResource(R.string.recording_complete),
+                    icon = Icons.Filled.Stop,
+                    onToggle = {
+                        if(isRecordingComplete) {
+                            /**レコーディング停止**/
+                            mainScreenViewModel.recordingStop(recorder)
+                            /**録音した内容を文字起こし**/
+                            mainScreenViewModel.openAiAudioApi(filePath)
+                            /**ボタンのフラグを元に戻す**/
+                            isRecording = false
+                            isRecordingPause = true
+                            isRecordingComplete = false
+                        }
+                    }
+                )
+
                 Spacer(modifier = Modifier.width(16.dp))
+
                 /**要約ボタン**/
                 OperationButton(
                     modifier = Modifier.height(88.dp),
