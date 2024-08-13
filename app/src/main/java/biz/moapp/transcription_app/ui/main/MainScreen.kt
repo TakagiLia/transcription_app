@@ -145,6 +145,25 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                         }
                     }
 
+                    is UIState.RecordingStart -> {
+                        Column(modifier = modifier.padding(top = (width * 0.4f),)) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    is UIState.RecordingPause -> {
+                        Column(
+                            modifier = modifier.padding(top = (width * 0.4f),),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = "レコーディング一時停止")
+                        }
+                    }
+
+                    is UIState.RecordingComplete -> {
+                        /**レコーディング完了時に何かあればUI記述**/
+                    }
+
                     is UIState.Loading -> {
                         Column(modifier = modifier.padding(top = (width * 0.4f),)) {
                             CircularProgressIndicator()
@@ -240,7 +259,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                 )
 
                 Spacer(modifier = Modifier.width(40.dp))
-
                 /**レコーディング操作ボタン（New）**/
                 RecordingButton(
                     isEnable = isRecording,
@@ -261,7 +279,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                             } else {
                                 Log.d("--recording", "Re Start")
                                 /**レコーディング再開**/
-                                recorder.resume()
+                                mainScreenViewModel.recordingResume(recorder)
                                 /**レコードをポーズではない状態にする**/
                                 isRecordingPause = !isRecordingPause
                                 /**レコード完了ボタンを非活性**/
@@ -270,7 +288,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                         } else {
                             Log.d("--recording", "Stop")
                             /**レコーディング一時停止**/
-                            recorder.pause()
+                            mainScreenViewModel.recordingPause(recorder)
                             /**レコードをポーズにする**/
                             isRecordingPause = !isRecordingPause
                             /**レコード完了ボタンを活性**/
