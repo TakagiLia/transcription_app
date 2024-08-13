@@ -5,9 +5,6 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -69,11 +66,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
     var isRecording by remember { mutableStateOf(false) }
     var isRecordingPause by remember { mutableStateOf(true) }
     var isRecordingComplete by remember { mutableStateOf(false) }
-    val convertTextAreaState = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
-        }
-    }
+    var isAudioToText by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     var recorder = remember { MediaRecorder(context) }
@@ -150,10 +143,8 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                     }
 
                     is UIState.Success -> {
-                        AnimatedVisibility(
-                            visibleState = convertTextAreaState,
-                            enter = slideInHorizontally()
-                        ) {
+                        /**文字起こしボタン表示**/
+                        isAudioToText = true
                             Column(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState()),
@@ -188,7 +179,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                                 ) {
                                 }
                             }
-                        }
                     }
 
                     is UIState.Error -> {
@@ -227,8 +217,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                             mainScreenViewModel.recordingStop(recorder)
                             /**録音した内容を文字起こし**/
                             mainScreenViewModel.openAiAudioApi(filePath)
-                            /**文字起こしエリア表示**/
-                            convertTextAreaState.targetState = true
                             /**ボタンのフラグを元に戻す**/
                             isRecording = false
                             isRecordingPause = true
@@ -252,8 +240,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                                 Log.d("--recording", "Initial Start")
                                 /**録音時間リセット**/
                                 recordedTime = 0L
-                                /**テキスト変換エリア非表示**/
-                                convertTextAreaState.targetState = false
+                                /**レコーディング開始**/
                                 recorder = mainScreenViewModel.recordingStart(recorder, filePath)
                             } else {
                                 Log.d("--recording", "Re Start")
@@ -280,7 +267,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                 OperationButton(
                     modifier = Modifier.height(88.dp),
                     buttonName = stringResource(R.string.recording_summarize),
-                    enabled = convertTextAreaState.currentState,
+                    enabled = isAudioToText,
                     clickAction = {
                         /**要約表示画面に遷移**/
         //                mainScreenViewModel.summary(mainScreenViewModel.audioText.value,/*navController*/)
