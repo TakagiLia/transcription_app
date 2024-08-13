@@ -112,36 +112,15 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                 /**音声をテキスト変換時の結果表示**/
                 when (mainUiState) {
                     is UIState.NotYet -> {
-
-                        /**ヘルプテキストの表示値を設定**/
-                        val recordingHelpText = when (isRecording) {
-                            true -> stringResource(R.string.recording_help_stop)
-                            false -> stringResource(R.string.recording_help_start)
-                        }
-                        val recordingHelpTextIcon = when (isRecording) {
-                            true -> Icons.Filled.PauseCircleFilled
-                            false -> Icons.Filled.Mic
-                        }
-                        val completeHelpText = when (isRecordingComplete) {
-                            true -> stringResource(R.string.recording_help_complete)
-                            false -> ""
-                        }
-                        val completeHelpTextIcon = when (isRecordingComplete) {
-                            true -> Icons.Filled.StopCircle
-                            false -> null
-                        }
-
                         /**ヘルプテキスト表示**/
                         Column(
                             modifier = modifier.padding(top = (width * 0.4f),),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.Start
                         ) {
                             /**レコーディング操作ボタンのヘルプテキスト**/
-                            HelpTextInIcon(recordingHelpTextIcon, recordingHelpText)
-                            completeHelpTextIcon?.let {
-                                /**レコーディンング完了ボタンのヘルプテキスト**/
-                                HelpTextInIcon(it, completeHelpText)
-                            }
+                            HelpTextInIcon(Icons.Filled.Mic, stringResource(R.string.recording_help_stop))
+                            HelpTextInIcon(Icons.Filled.PauseCircleFilled,  stringResource(R.string.recording_help_start))
+                            HelpTextInIcon(Icons.Filled.StopCircle, stringResource(R.string.recording_help_complete))
                         }
                     }
 
