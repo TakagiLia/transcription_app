@@ -254,6 +254,8 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                             isRecording = false
                             isRecordingPause = true
                             isRecordingComplete = false
+                            /**文字起こしボタン(AIまとめ)表示**/
+                            isAudioToText = true
                         }
                     }
                 )
