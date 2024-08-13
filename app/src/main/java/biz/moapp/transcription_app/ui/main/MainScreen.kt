@@ -123,7 +123,7 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                             modifier = modifier.padding(top = (width * 0.4f),),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "レコーディング一時停止")
+                            Text(text = stringResource(R.string.recording_pause))
                         }
                     }
 

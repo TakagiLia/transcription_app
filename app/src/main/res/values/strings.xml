@@ -10,6 +10,7 @@
     <string name="recording_help_stop">録音が一時停止</string>
     <string name="recording_help_complete">録音完了、音声をテキスト化</string>
     <string name="recording_error">文字起こしを失敗しました。</string>
+    <string name="recording_pause">レコーディング一時停止</string>
 
     <!--ボタンラベル-->
     <string name="recording_start">録音開始</string>
