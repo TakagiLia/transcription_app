@@ -53,9 +53,6 @@ fun SummaryScreen(modifier: Modifier = Modifier,mainScreenViewModel: MainScreenV
     }
 
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    val maxModifierButton: Modifier = Modifier
-        .fillMaxWidth()
-        .height(80.dp)
 
     /**画面サイズの取得**/
         BoxWithConstraints {
