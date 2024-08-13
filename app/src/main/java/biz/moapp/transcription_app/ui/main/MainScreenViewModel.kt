@@ -115,7 +115,8 @@ class MainScreenViewModel@Inject constructor(
     }
 
     fun recordingStop(recorder: MediaRecorder){
-        audioUseCase.recordingStop(recorder)
+        _mainScreenUiState.value = UIState.RecordingComplete
+            audioUseCase.recordingStop(recorder)
     }
 
     fun recordingPause(recorder: MediaRecorder){
