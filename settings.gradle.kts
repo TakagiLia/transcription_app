@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "transcription_app"
 include(":app")
+include (":models", ":app")

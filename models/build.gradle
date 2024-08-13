@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace "biz.moapp.transcription_app"
+    compileSdkVersion 33
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 33
+    }
+    buildFeatures {
+        buildConfig = false
+    }
+    sourceSets {
+        getByName("main") {
+            assets.srcDirs(files(files(layout.buildDirectory.file("/generated/assets"))))
+        }
+    }
+}
+beforeEvaluate {
+    tasks.register("genUUID") {
+        uuid = UUID.randomUUID().toString()
+        outputDir = file("${layout.buildDirectory.get().asFile}/generated/assets/vosk-model-ja")
+        outputFile = file("$outputDir/uuid")
+
+        doLast {
+            outputDir.mkdirs()
+            outputFile.writeText(uuid)
+        }
+    }
+
+    tasks.named("assemble") {
+        dependsOn("genUUID")
+    }
+}
