@@ -66,13 +66,14 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
     var isRecording by remember { mutableStateOf(false) }
     var isRecordingPause by remember { mutableStateOf(true) }
     var isRecordingComplete by remember { mutableStateOf(false) }
-    var isAudioToText by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     var recorder = remember { MediaRecorder(context) }
     val filePath : String = context.getExternalFilesDir(null)?.absolutePath + "/recording.m4a"
     val mainUiState by mainScreenViewModel.mainScreenUiState.collectAsState()
     val systemColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+
+    val isAudioToText by mainScreenViewModel.audioToText.collectAsState()
 
     /**カウントした秒数をもつ**/
     var recordedTime by remember { mutableLongStateOf(0L) }
@@ -260,8 +261,6 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                             isRecording = false
                             isRecordingPause = true
                             isRecordingComplete = false
-                            /**文字起こしボタン(AIまとめ)表示**/
-                            isAudioToText = true
                         }
                     }
                 )
