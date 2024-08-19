@@ -62,8 +62,8 @@ class MainActivity : ComponentActivity() {
     private val callback = object : OnBackPressedCallback(true) {
         /**handleOnBackPressedを呼び出して、戻るキーを押したときの処理を記述**/
         override fun handleOnBackPressed() {
-            /**何も記述しないのでハードの戻るボタンで戻らない**/
-            return
+            /**ハードの戻るボタンでアプリ終了**/
+            return finish()
         }
     }
 
