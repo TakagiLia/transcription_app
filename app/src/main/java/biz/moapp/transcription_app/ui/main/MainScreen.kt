@@ -106,8 +106,8 @@ fun MainScreen(modifier: Modifier = Modifier, mainScreenViewModel: MainScreenVie
                             horizontalAlignment = Alignment.Start
                         ) {
                             /**レコーディング操作ボタンのヘルプテキスト**/
-                            HelpTextInIcon(Icons.Filled.Mic, stringResource(R.string.recording_help_stop))
-                            HelpTextInIcon(Icons.Filled.PauseCircleFilled,  stringResource(R.string.recording_help_start))
+                            HelpTextInIcon(Icons.Filled.Mic, stringResource(R.string.recording_help_start))
+                            HelpTextInIcon(Icons.Filled.PauseCircleFilled,  stringResource(R.string.recording_help_stop))
                             HelpTextInIcon(Icons.Filled.StopCircle, stringResource(R.string.recording_help_complete))
                         }
                     }
