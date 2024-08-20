@@ -105,7 +105,7 @@ class MainScreenViewModel@Inject constructor(
                     _mainScreenUiState.value = UIState.Success(response)
                     _audioText.value = response.text
                 }
-
+                _audioToText.value = true
             }catch(e:Exception){
                 _mainScreenUiState.value = UIState.Error(e.message ?: "Unknown error")
                     Log.d("--openAiAudioApi Error","Message:${e.message}",e)
