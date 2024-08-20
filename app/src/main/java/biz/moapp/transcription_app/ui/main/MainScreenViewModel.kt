@@ -55,6 +55,9 @@ class MainScreenViewModel@Inject constructor(
 
     var mediaPlayer: MediaPlayer? by mutableStateOf(null)
 
+    private val _audioToText = MutableStateFlow<Boolean>(false)
+    val audioToText: StateFlow<Boolean> = _audioToText.asStateFlow()
+
     fun summary(message: String){
         /**ローディング**/
         summaryUiState = summaryUiState.copy(sendResultState = SummaryUiState.SendResultState.Loading)
@@ -68,6 +71,7 @@ class MainScreenViewModel@Inject constructor(
                 summaryUiState = when (result) {
                     /**成功時**/
                     is ChatCompletions.Response.Success -> {
+                        _audioToText.value = false
                         result.choices.map { value -> value.message?.content?.let{ _summaryText.value = it} }
 
                         Log.d("--result response１-","${result.choices.map { it.message?.content }}")
@@ -110,6 +114,7 @@ class MainScreenViewModel@Inject constructor(
     }
 
     fun recordingStart(recorder: MediaRecorder, filePath : String) : MediaRecorder{
+        _audioToText.value = false
         _mainScreenUiState.value = UIState.RecordingStart
         return audioUseCase.recordingStart(recorder,filePath)
     }
