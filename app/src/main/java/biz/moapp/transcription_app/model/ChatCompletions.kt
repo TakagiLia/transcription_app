@@ -1,15 +1,16 @@
 package biz.moapp.transcription_app.model
 
-import com.squareup.moshi.Json
 import biz.moapp.transcription_app.model.child.ChatChoice
 import biz.moapp.transcription_app.model.child.ChatMessage
 import biz.moapp.transcription_app.model.child.Usage
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
 
 /**APIに送信するリクエストデータの構造を定義 **/
 sealed interface ChatCompletions {
     @Serializable
-//    @JsonClass(generateAdapter = true)
+    @JsonClass(generateAdapter = true)
     data class Request(
         val model: String,
         val messages: List<ChatMessage>,
@@ -29,6 +30,7 @@ sealed interface ChatCompletions {
 
     sealed interface Response : ChatCompletions {
         @Serializable
+        @JsonClass(generateAdapter = true)
         data class Success(
             val id: String,
             val created: Int,
