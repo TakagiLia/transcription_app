@@ -1,6 +1,7 @@
 package biz.moapp.transcription_app.network
 
 import biz.moapp.transcription_app.OPENAI_API_KEY
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import kotlinx.serialization.Serializable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -36,6 +37,7 @@ interface OpenAIService {
 }
 
 @Serializable
+@JsonClass(generateAdapter = true)
 data class TranscriptionResponse(
     val text: String
 )

@@ -33,3 +33,6 @@
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
 -keep class com.squareup.moshi.** { *; }
 -dontwarn com.squareup.moshi.**
+-keep class * extends com.squareup.moshi.JsonAdapter {
+    public <init>(...);
+}
