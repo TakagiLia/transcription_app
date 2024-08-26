@@ -38,3 +38,16 @@
 }
 -keep class retrofit2.** { *; }
 -dontwarn retrofit2.**
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keep class retrofit2.adapter.** { *; }
+-keep class retrofit2.converter.** { *; }
+# OkHttp
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# Kotlin Serialization
+-keep class kotlinx.serialization.** { *; }
+-dontwarn kotlinx.serialization.**
+
+# ネットワーク関連クラスの保持
+-keep class biz.moapp.transcription_app.network.** { *; }
