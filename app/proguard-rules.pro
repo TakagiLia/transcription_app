@@ -36,3 +36,5 @@
 -keep class * extends com.squareup.moshi.JsonAdapter {
     public <init>(...);
 }
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
