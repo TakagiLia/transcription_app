@@ -1,8 +1,8 @@
 package biz.moapp.transcription_app.network
 
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.JsonClass
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class TranscriptionResponse(
     val text: String
 )
