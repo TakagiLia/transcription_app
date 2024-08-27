@@ -3,7 +3,6 @@ package biz.moapp.transcription_app.model.child
 import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
 
-@Serializable
 @JsonClass(generateAdapter = true)
 data class ChatCompletionFunction(
     val name: String? = null,
