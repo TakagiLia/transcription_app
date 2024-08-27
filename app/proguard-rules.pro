@@ -28,13 +28,7 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLParameters
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
-# Call、Responseのジェネリック署名を保持する
--keep,allowobfuscation,allowshrinking interface retrofit2.Call
--keep,allowobfuscation,allowshrinking class retrofit2.Response
--keep class com.squareup.moshi.** { *; }
--dontwarn com.squareup.moshi.**
--keep class * extends com.squareup.moshi.JsonAdapter {
-    public <init>(...);
-}
+#通信系
 -keep class retrofit2.** { *; }
 -dontwarn retrofit2.**
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
