@@ -32,3 +32,5 @@
 -keep class retrofit2.** { *; }
 -dontwarn retrofit2.**
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+# ネットワーク関連クラスの保持
+-keep class biz.moapp.transcription_app.network.** { *; }
